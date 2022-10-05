@@ -1,3 +1,21 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+*{
+    font-family: "Poppins", sans-serif;
+}
+*:focus{
+    outline:none;
+    -moz-outline:none;
+}
+
+::placeholder{
+    @apply text-base font-normal
+}
+
+@layer base{
+    .popup{
+        @apply fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 shadow-md max-w-md rounded-sm px-5 py-7
+    }
+}
