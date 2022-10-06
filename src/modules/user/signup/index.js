@@ -1,6 +1,7 @@
 import Input from "@components/input"
 import { user } from "@src/api"
 import Button from "@src/components/button"
+import { VALIDATE } from "@src/utils/validations"
 import Image from "next/image"
 import Link from "next/link"
 import { useForm } from "react-hook-form"
@@ -42,10 +43,11 @@ export default function Signup(){
             attrs: {
                 placeholder: "johndoe or john@gmail.com",
                 form: "signup-form",
-                ...register("email", {required: true}),
+                ...register("email", {required: true, pattern: VALIDATE.EMAIL}),
             },
             err: errors.email && (
                 errors.email.type == "required" && "please enter email"
+                || errors.email.type == "pattern" && "please enter valid email"
             )
         },
         {
@@ -57,8 +59,8 @@ export default function Signup(){
                 ...register("contact_no", {required: true, maxLength: 10, minLength: 10}),
             },
             err: errors.contact_no && (
-                errors.contact_no.type == "required" && "please enter password"
-                || (errors.contact_no.type == "minLength" || errors.contact_no.type == "maxLength") && "please more than 8 characters are required"
+                errors.contact_no.type == "required" && "please enter contact number"
+                || (errors.contact_no.type == "minLength" || errors.contact_no.type == "maxLength") && "please enter 10 numbers"
             )
         },
         {
