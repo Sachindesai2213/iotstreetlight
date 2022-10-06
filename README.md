@@ -36,4 +36,4 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 ## environment setup
 create .env.local and add following code
 
-NEXT_PUBLIC_APi_URL=http://localhost:8000
+NEXT_PUBLIC_API_URL=http://localhost:8000
