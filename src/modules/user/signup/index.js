@@ -11,7 +11,7 @@ export default function Signup(){
     
     const inputs = [
         {
-            halfWidth: true,
+            isHalfWidth: true,
             label: "First name",
             leftIcon: "account-circle-primary",
             attrs: {
@@ -24,7 +24,7 @@ export default function Signup(){
             )
         },
         {
-            halfWidth: true,
+            isHalfWidth: true,
             label: "Last name",
             leftIcon: "account-circle-primary",
             attrs: {
@@ -62,7 +62,7 @@ export default function Signup(){
             )
         },
         {
-            halfWidth: true,
+            isHalfWidth: true,
             label: "Username",
             leftIcon: "account-circle-primary",
             attrs: {
@@ -75,7 +75,7 @@ export default function Signup(){
             )
         },
         {
-            halfWidth: true,
+            isHalfWidth: true,
             label: "Password",
             leftIcon: "lock-outline-primary",
             attrs: {
@@ -96,7 +96,7 @@ export default function Signup(){
         let password = e.password
     }
     return (
-        <div className="px-5 py-7 mx-auto max-w-md md:popup">
+        <div className="popup">
             <div className="flex items-center">
                 <p className="text-primary text-lg font-semibold mr-5">welcome</p>
                 <Image src="/images/icons/celebration-primary.svg" width={24} height={24}/>
@@ -111,7 +111,7 @@ export default function Signup(){
                 {
                     inputs.map((item, key) => {
                         return (
-                            <div key={key} className={`mb-4 ${!item.halfWidth ? "col-span-2" : ""}`}>
+                            <div key={key} className={`mb-4 ${item.isHalfWidth ? "col-span-2 md:col-span-1" : "col-span-2"}`}>
                                 <Input {...item}/>
                             </div>
                         )

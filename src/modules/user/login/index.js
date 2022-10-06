@@ -43,7 +43,7 @@ function Login(){
         let password = e.password
     }
     return (
-        <div className="px-5 py-7 mx-auto max-w-md md:popup">
+        <div className="popup">
             <div className="flex items-center">
                 <p className="text-primary text-lg font-semibold mr-5">welcome back</p>
                 <Image src="/images/icons/celebration-primary.svg" width={24} height={24}/>
