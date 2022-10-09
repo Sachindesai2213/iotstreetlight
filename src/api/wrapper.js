@@ -13,7 +13,7 @@ async function fetchData(method, url, payload){
         headers: {
             'Content-type': 'application/json'
         },
-        body: payload
+        body: JSON.stringify(payload)
     })
     return response.json()
 }

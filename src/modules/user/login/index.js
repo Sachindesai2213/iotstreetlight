@@ -29,7 +29,7 @@ function Login(){
                 placeholder: "********",
                 form: "login-form",
                 type: "password",
-                ...register("password", {required: true, minLength: 8}),
+                ...register("password", {required: true, minLength: 2}),
             },
             err: errors.password && (
                 errors.password.type == "required" && "please enter password"
@@ -38,9 +38,9 @@ function Login(){
         }
     ]
 
-    const login = (e) => {
-        let username = e.username
-        let password = e.password
+    const login = async (data) => {
+        const response = await user.login(data)
+        console.log(response)
     }
     return (
         <div className="popup">
