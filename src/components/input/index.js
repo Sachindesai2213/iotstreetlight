@@ -16,7 +16,7 @@ export default function Input(props){
                 </div>
             </div>
             {
-                err && <p className="text-red-500 text-xs">{err}</p>
+                err && <p className="error">{err}</p>
             }
         </div>
     )

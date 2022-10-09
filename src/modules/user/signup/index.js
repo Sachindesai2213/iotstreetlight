@@ -4,11 +4,14 @@ import Button from "@src/components/button"
 import { VALIDATE } from "@src/utils/validations"
 import Image from "next/image"
 import Link from "next/link"
+import { useState } from "react"
 import { useForm } from "react-hook-form"
 
 export default function Signup(){
 
     const {register, handleSubmit, formState:{errors}} = useForm()
+    const [err, setErr] = useState(null)
+    const [loading, setLoading] = useState(false)
     
     const inputs = [
         {
@@ -93,8 +96,16 @@ export default function Signup(){
         },
     ]
 
-    const signup = (e) => {
-        console.log(e)
+    const signup = async (data) => {
+        setLoading(true)
+        setErr(null)
+        const response = await user.signup(data)
+        if(response.flash){
+            alert("Success")
+        } else{
+            setErr(response.message)
+        }
+        setLoading(false)
     }
     return (
         <div className="popup">
@@ -119,8 +130,11 @@ export default function Signup(){
                     })
                 }
             </div>
+            {
+                err && <p className="error mb-7">{err}</p>
+            }
             <div className="mt-4">
-                <Button text="Signup" variant="primary" attrs={{form: "signup-form", type: "submit"}}/>
+                <Button text="Signup" variant="primary" attrs={{form: "signup-form", type: "submit"}} loading={loading}/>
             </div>
             <div className="mt-7">
                 <Link href="/login">

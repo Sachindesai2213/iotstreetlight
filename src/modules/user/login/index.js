@@ -1,13 +1,18 @@
 import Input from "@components/input"
 import { user } from "@src/api"
 import Button from "@src/components/button"
+import { login_user } from "@src/utils/functions"
 import Image from "next/image"
 import Link from "next/link"
+import { useState } from "react"
 import { useForm } from "react-hook-form"
 
 function Login(){
 
     const {register, handleSubmit, formState:{errors}} = useForm()
+
+    const [loading, setLoading] = useState(false)
+    const [err, setErr] = useState(null)
     
     const inputs = [
         {
@@ -39,8 +44,15 @@ function Login(){
     ]
 
     const login = async (data) => {
+        setLoading(true)
+        setErr(null)
         const response = await user.login(data)
-        console.log(response)
+        if(response.flash){
+            login_user(response.data)
+        } else{
+            setErr(response.message)
+        }
+        setLoading(false)
     }
     return (
         <div className="popup">
@@ -65,8 +77,11 @@ function Login(){
                     })
                 }
             </div>
+            {
+                err && <p className="error mb-7">{err}</p>
+            }
             <div>
-                <Button text="Login" variant="primary" attrs={{form: "login-form", type: "submit"}}/>
+                <Button text="Login" variant="primary" attrs={{form: "login-form", type: "submit"}} loading={loading}/>
             </div>
             <div className="mt-7">
                 <Link href="/signup">
