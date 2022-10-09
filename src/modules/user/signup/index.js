@@ -94,8 +94,7 @@ export default function Signup(){
     ]
 
     const signup = (e) => {
-        let username = e.username
-        let password = e.password
+        console.log(e)
     }
     return (
         <div className="popup">
