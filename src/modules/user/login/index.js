@@ -4,6 +4,7 @@ import Button from "@src/components/button"
 import { login_user } from "@src/utils/functions"
 import Image from "next/image"
 import Link from "next/link"
+import { useRouter } from "next/router"
 import { useState } from "react"
 import { useForm } from "react-hook-form"
 
@@ -13,6 +14,8 @@ function Login(){
 
     const [loading, setLoading] = useState(false)
     const [err, setErr] = useState(null)
+
+    const router = useRouter()
     
     const inputs = [
         {
@@ -49,6 +52,7 @@ function Login(){
         const response = await user.login(data)
         if(response.flash){
             login_user(response.data)
+            router.push("/meters")
         } else{
             setErr(response.message)
         }

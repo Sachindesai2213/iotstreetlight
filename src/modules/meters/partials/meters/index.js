@@ -1,73 +1,20 @@
-
 import { user } from "@src/api"
-import Loader from "@src/components/loader";
-import { getCookie } from "@src/utils/cookies";
-import { logout_user } from "@src/utils/functions";
-import DataGrid, {
-    Column,
-    FilterRow,
-    HeaderFilter,
-    Editing,
-    Lookup,
-    PatternRule,
-    MasterDetail
-} from 'devextreme-react/data-grid';
-import { useState } from 'react';
+import { getCookie } from "@src/utils/cookies"
+import DataGrid, { Column, Editing, FilterRow, HeaderFilter, Lookup, MasterDetail, PatternRule } from "devextreme-react/data-grid"
+import Parameters from "./parameters"
 
-const pageSizes = [10, 25, 50, 100];
-
-const periodType = [
+const PERIOD_TYPES = [
     { type: "Fixed" },
     { type: "Automatic" }
 ]
 
-const DetailTemplate = () => {
-    return (
-        <DataGrid
-          dataSource={[]}
-          allowColumnReordering
-          allowFiltering
-          rowAlternationEnabled
-          showBorders
-          showFilterRows
-          onSaved={async (e) => {
-              e.changes[0].data.user_id = user_id
-              const response = await user.meters.create(e.changes[0].data)
-              console.log(response)
-          }}
-        >
-            <Editing
-                mode="row"
-                // allowUpdating={true}
-                // allowDeleting={true}
-                allowAdding={true} />
-            <FilterRow visible />
-            <HeaderFilter visible />
-            <Column dataField="Subject" />
-            <Column dataField="StartDate" dataType="date" />
-            <Column dataField="DueDate" dataType="date" />
-            <Column dataField="Priority" />
-        </DataGrid>
-    )
-}
-
-export default function Test() {
-
-    const [data, setData] = useState([])
-
+export default function MetersTable(props){
+    const {meters} = props
     const user_id = getCookie("user_id")
-
-    const meters = user.meters.all(user_id)
-
-    if(!meters){
-        return <Loader/>
-    }
-
     return (
         <div className="p-5">
-            <button onClick={() => logout_user()}>Logout</button>
             <DataGrid
-                dataSource={meters.data.meters || []}
+                dataSource={meters || []}
                 allowColumnReordering
                 allowFiltering
                 rowAlternationEnabled
@@ -76,7 +23,6 @@ export default function Test() {
                 onSaved={async (e) => {
                     e.changes[0].data.user_id = user_id
                     const response = await user.meters.create(e.changes[0].data)
-                    console.log(response)
                 }}
             >
                 <Editing
@@ -93,7 +39,7 @@ export default function Test() {
                 <Column dataField="group" caption="Group" alignment="center" />
                 <Column dataField="period_type" caption="Period Type" alignment="center">
                     <Lookup
-                        dataSource={periodType}
+                        dataSource={PERIOD_TYPES}
                         valueExpr="type"
                         displayExpr="type"
                     />
@@ -116,10 +62,10 @@ export default function Test() {
                 </Column>
                 <MasterDetail
                     enabled={true}
-                    component={DetailTemplate}
+                    component={Parameters}
                 />
                 {/* <Column dataField="off_time" caption="Off Time" alignment="center" dataType="datetime" format="HH:mm" /> */}
             </DataGrid>
         </div>
-    );
+    )
 }

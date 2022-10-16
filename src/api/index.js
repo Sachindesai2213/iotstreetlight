@@ -1,5 +1,5 @@
 import useSWR from "swr";
-import { USER } from "./endpoints";
+import { USERS } from "./endpoints";
 import { api } from "./wrapper";
 
 function swr(variable, fxn){
@@ -8,10 +8,14 @@ function swr(variable, fxn){
 }
 
 export const user = {
-    login: (payload) => api.post(USER.LOGIN, payload),
-    signup: (payload) => api.post(USER.SIGNUP, payload),
+    login: (payload) => api.post(USERS.LOGIN, payload),
+    signup: (payload) => api.post(USERS.SIGNUP, payload),
     meters: {
-        all: (user_id) => swr(USER.METERS.ALL(user_id), () => api.get(USER.METERS.ALL(user_id))),
-        create: (payload) => api.post(USER.METERS.CREATE, payload)
+        all: (user_id) => swr(USERS.METERS.ALL(user_id), () => api.get(USERS.METERS.ALL(user_id))),
+        create: (payload) => api.post(USERS.METERS.CREATE, payload),
+
+        parameters: {
+            create: (payload) => api.post(USERS.METERS.PARAMETERS.CREATE, payload),
+        }
     }
 }
