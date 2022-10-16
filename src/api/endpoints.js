@@ -8,5 +8,8 @@ export const USERS = {
         PARAMETERS: {
             CREATE: "/api/meter-parameters/"
         }
+    },
+    ACTIVITIES: {
+        ALL: (user_id) => "/api/activities/"
     }
 }
