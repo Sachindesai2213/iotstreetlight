@@ -1,9 +1,14 @@
 import Image from "next/image";
+import Link from "next/link";
 
 export default function(){
     return (
-        <div className="">
-            <p className="text-sm text-primary">Logo</p>
-        </div>
+        <Link href="/">
+            <a>
+                <div className="">
+                    <p className="text-sm text-primary">Logo</p>
+                </div>
+            </a>
+        </Link>
     )
 }

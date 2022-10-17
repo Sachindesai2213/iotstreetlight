@@ -1,6 +1,6 @@
 import { user } from "@src/api"
 import Loader from "@src/components/loader"
-import Navbar from "@src/components/navbar"
+import Header from "@src/components/header"
 import { getCookie } from "@src/utils/cookies"
 import { isUserLoggedIn } from "@src/utils/functions"
 import { useRouter } from "next/router"
@@ -22,7 +22,7 @@ export default function Meters(){
     const meters = user.meters.all(user_id)
     return (
         <>
-            <Navbar/>
+            <Header activeNavItem="meters"/>
             <div>
                 {
                     !!meters ? <MetersTable meters={meters.data.meters}/> : <Loader/>

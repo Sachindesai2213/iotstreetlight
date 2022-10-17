@@ -1,9 +1,10 @@
+import Icon from "../icon"
 import Loader from "../loader"
 
 export default function Button(props){
-    const {text, variant, attrs, loading} = props
+    const {text, variant, attrs, loading, icon, isIconButton, additionalClasses} = props
 
-    let btnClass = ""
+    let btnClass = "hover:bg-lightprimary"
     let textClass = ""
 
     switch(variant){
@@ -20,8 +21,13 @@ export default function Button(props){
         return <Loader/>
     }
     return (
-        <button className={`h-11 rounded-md w-full transition-all duration-100 ${btnClass}`} {...attrs}>
-            <p className={`text-base ${textClass}`}>{text}</p>
+        <button className={`flex items-center justify-center h-11 ${isIconButton ? "w-11 rounded-full" : "w-full rounded-md"} transition-all duration-100 ${btnClass} ${additionalClasses}`} {...attrs}>
+            {
+                !!text && <p className={`text-base ${textClass}`}>{text}</p>
+            }
+            {
+                !!icon && <Icon icon={icon}/>
+            }
         </button>
     )
 }
