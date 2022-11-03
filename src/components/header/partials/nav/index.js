@@ -36,9 +36,9 @@ export default function Nav(props){
                 NAV_ITEMS.map((item, key) => {
                     const isActive = item.value == active
                     return (
-                        <Link href={item.link}>
+                        <Link href={item.link} key={key}>
                             <a>
-                                <div className="px-5" key={key}>
+                                <div className="px-5">
                                     <p className={`font-base ${isActive ? "text-primary font-medium" : "text-gray1 hover:text-primary"}`}>{item.name}</p>
                                 </div>
                             </a>
