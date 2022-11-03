@@ -17,5 +17,8 @@ export const user = {
         parameters: {
             create: (payload) => api.post(USERS.METERS.PARAMETERS.CREATE, payload),
         }
+    },
+    activities: {
+        all: (user_id) => swr(USERS.ACTIVITIES.ALL(user_id), () => api.get(USERS.ACTIVITIES.ALL(user_id)))
     }
 }
