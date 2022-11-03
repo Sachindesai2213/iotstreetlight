@@ -1,6 +1,6 @@
 import { user } from "@src/api"
 import Loader from "@src/components/loader"
-import Navbar from "@src/components/navbar"
+import Header from "@src/components/header"
 import { getCookie } from "@src/utils/cookies"
 import { isUserLoggedIn } from "@src/utils/functions"
 import { useRouter } from "next/router"
@@ -22,7 +22,7 @@ export default function Activities(){
     const activities = user.activities.all(user_id)
     return (
         <>
-            <Navbar/>
+            <Header activeNavItem="activities"/>
             <div>
                 {
                     !!activities ? <ActivitiesTable activities={activities.data.activities}/> : <Loader/>
