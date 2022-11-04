@@ -1,15 +1,18 @@
 export const USERS = {
-    LOGIN: "/api/login/",
-    SIGNUP: "/api/signup/",
+    LOGIN: "/api/login",
+    SIGNUP: "/api/signup",
     METERS: {
-        ALL: (user_id) => "/api/meters/?user_id=" + user_id,
-        CREATE: "/api/meters/",
+        ALL: (user_id) => "/api/meters?user_id=" + user_id,
+        CREATE: "/api/meters",
         
         PARAMETERS: {
-            CREATE: "/api/meter-parameters/"
+            CREATE: "/api/meter-parameters"
         }
     },
     ACTIVITIES: {
-        ALL: (user_id) => "/api/activities/"
+        ALL: (user_id) => "/api/activities?user_id=" + user_id,
+    },
+    ANALYTICS: {
+        ALL: ({user_id, start_date, end_date}) => "/api/analytics?user_id=" + user_id + "&start_date=" + start_date + "&end_date=" + end_date,
     }
 }
