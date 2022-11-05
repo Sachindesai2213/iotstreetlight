@@ -7,7 +7,7 @@ import { getCookie } from "@src/utils/cookies"
 import { user } from "@src/api"
 
 export default function DateFilter(props){
-    const {start_date, end_date, type, setPayload} = props
+    const {start_date, end_date, setPayload, additionalInputs} = props
     const [loading, setLoading] = useState(false)
     const [err, setErr] = useState(null)
     const {register, handleSubmit, formState:{errors}} = useForm()
@@ -33,13 +33,13 @@ export default function DateFilter(props){
             attrs: {
                 form: "date-filter-form",
                 type: "date",
-                value: end_date,
                 ...register("end_date", {required: true, value: end_date}),
             },
             err: errors.end_date && (
                 errors.end_date.type == "required" && "Please enter a End Date"
             )
-        }
+        },
+        ... additionalInputs
     ]
 
     const filteredData = (data) => {
