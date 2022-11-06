@@ -25,13 +25,18 @@ export default function Reports(){
             router.push(`/login?target=${router.asPath}`)
         }
     }, [])
+    
+    const onSubmitForm = (data) => {
+        data['user_id'] = user_id
+        setPayload(data)
+    }
 
     const reports = user.reports.all(payload)
     return (
         <>
             <Header activeNavItem="reports"/>
             <div className="p-5">
-                <DateFilter start_date={iso_date_format} end_date={iso_date_format} type="reports" setPayload={setPayload}/>
+                <DateFilter onSubmitForm={onSubmitForm} start_date={iso_date_format} end_date={iso_date_format} type="reports" setPayload={setPayload}/>
                 {
                     !!reports ? <ReportsTable reports={reports.data.reports}/> : <Loader/>
                 }
