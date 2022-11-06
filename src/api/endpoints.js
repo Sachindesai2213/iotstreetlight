@@ -12,7 +12,7 @@ export const USERS = {
     ACTIVITIES: {
         ALL: (user_id) => "/api/activities?user_id=" + user_id,
     },
-    ANALYTICS: {
-        ALL: ({user_id, start_date, end_date}) => "/api/analytics?user_id=" + user_id + "&start_date=" + start_date + "&end_date=" + end_date,
+    REPORTS: {
+        ALL: ({user_id, start_date, end_date}) => "/api/reports?user_id=" + user_id + "&start_date=" + start_date + "&end_date=" + end_date,
     }
 }

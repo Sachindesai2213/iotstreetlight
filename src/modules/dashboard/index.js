@@ -39,10 +39,7 @@ export default function Analytics(){
     return (
         <>
             <Header activeNavItem="dashboard"/>
-            <div className="p-5 grid grid-cols-2 gap-3">
-                <DashboardCard chartData={chartData1}/>
-                <DashboardCard chartData={chartData2}/>
-            </div>
+            <h1>Dashboard</h1>
         </>
     )
 }

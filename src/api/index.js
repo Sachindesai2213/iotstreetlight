@@ -21,7 +21,7 @@ export const user = {
     activities: {
         all: (user_id) => swr(USERS.ACTIVITIES.ALL(user_id), () => api.get(USERS.ACTIVITIES.ALL(user_id)))
     },
-    analytics: {
-        all: (payload) => swr(USERS.ANALYTICS.ALL(payload), () => api.get(USERS.ANALYTICS.ALL(payload)))
+    reports: {
+        all: (payload) => swr(USERS.REPORTS.ALL(payload), () => api.get(USERS.REPORTS.ALL(payload)))
     }
 }

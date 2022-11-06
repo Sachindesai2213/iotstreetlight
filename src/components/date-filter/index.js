@@ -39,7 +39,7 @@ export default function DateFilter(props){
                 errors.end_date.type == "required" && "Please enter a End Date"
             )
         },
-        ... additionalInputs
+        // ... additionalInputs
     ]
 
     const filteredData = (data) => {

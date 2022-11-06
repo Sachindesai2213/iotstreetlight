@@ -4,7 +4,7 @@ import DateFilter from "../date-filter";
 import Icon from "../icon";
 import Loader from "../loader";
 
-export default function DashboardCard(props) {
+export default function AnalyticsCard(props) {
     const { text, loading, chartData } = props;
 
     if (loading) {

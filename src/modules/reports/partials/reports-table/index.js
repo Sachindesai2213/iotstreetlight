@@ -2,13 +2,13 @@ import { user } from "@src/api"
 import { getCookie } from "@src/utils/cookies"
 import DataGrid, { Column, FilterRow, HeaderFilter, ColumnChooser, Export } from "devextreme-react/data-grid"
 
-export default function AnalyticsTable(props){
-    const {analytics} = props
+export default function ReportsTable(props){
+    const {reports} = props
     const user_id = getCookie("user_id")
     return (
         <div>
             <DataGrid
-                dataSource={analytics || []}
+                dataSource={reports || []}
                 allowColumnReordering
                 allowFiltering
                 rowAlternationEnabled
