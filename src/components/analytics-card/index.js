@@ -1,5 +1,5 @@
 import { METER_PARAMETERS } from "@src/utils/globals";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import BarChart from "../charts/bar-chart";
 import DateFilter from "../date-filter";
 import Icon from "../icon";
@@ -18,8 +18,6 @@ export default function AnalyticsCard(props) {
             }
         ]
     })
-
-
 
     let graph
     let additionalInputs
@@ -48,7 +46,7 @@ export default function AnalyticsCard(props) {
         "parameter_select2": {
             label: "Select parameter",
             attrs: {
-                placeholder: "Select parameter1"
+                placeholder: "Select parameter2"
             },
             hook_form_name: "parameter2",
             hook_form_options: {required: true},
@@ -63,8 +61,6 @@ export default function AnalyticsCard(props) {
     const onSubmitForm = (data) => {
         console.log(data)
     }
-
-
 
     if (loading) {
         return <Loader />

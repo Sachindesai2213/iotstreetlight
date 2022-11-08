@@ -1,6 +1,6 @@
 import Loader from "../loader"
 import Button from "../button"
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import Input from "../input"
 import { useForm } from "react-hook-form"
 import { getCookie } from "@src/utils/cookies"
@@ -10,9 +10,13 @@ export default function DateFilter(props){
     const {start_date, end_date, setPayload, additionalInputs, onSubmitForm} = props
     const [loading, setLoading] = useState(false)
     const [err, setErr] = useState(null)
-    const {register, handleSubmit, formState:{errors}} = useForm()
+    const {register, handleSubmit, setValue, formState:{errors}} = useForm()
 
-    const formRef = useRef()
+    const formRef = useRef(0)
+    
+    useEffect(() => {
+        formRef.current = formRef.current ? formRef.current + 1 : 0
+    }, [])
 
     const inputs = [
         {
@@ -44,13 +48,14 @@ export default function DateFilter(props){
 
     return (
         <div className="py-2">
+            {console.log(formRef, 'Date Filter')}
             <form id={formRef} onSubmit={handleSubmit(onSubmitForm)} autoComplete="off"></form>
             <div className="grid grid-cols-3 gap-x-4 gap-y-2 items-end">
                 {
                     inputs.map((item, key) => {
                         return (
                             <div key={key}>
-                                <Input {...item} attrs={{...item.attrs, ...register(item.hook_form_name, item.hook_form_options), form: formRef}}/>
+                                <Input {...item} attrs={{...item.attrs, ...register(item.hook_form_name, item.hook_form_options), form: formRef}} setValue={setValue}/>
                             </div>
                         )
                     })
