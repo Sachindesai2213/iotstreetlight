@@ -1,5 +1,7 @@
 import { METER_PARAMETERS } from "@src/utils/globals";
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { useForm } from "react-hook-form";
+import Button from "../button";
 import BarChart from "../charts/bar-chart";
 import DateFilter from "../date-filter";
 import Icon from "../icon";
@@ -9,6 +11,8 @@ import Loader from "../loader";
 export default function AnalyticsCard(props) {
     const { text, loading, type } = props
     
+    const {register, handleSubmit, formState:{errors}, setValue, clearErrors} = useForm()
+
     const [chartData, setchartData] = useState({
         labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
         datasets: [
@@ -33,26 +37,58 @@ export default function AnalyticsCard(props) {
             graph = <BarChart chartData={chartData} />
             additionalInputs = ["parameter_select1", "parameter_select2"]
         break
+        case "comparison":
+            graph = <BarChart chartData={chartData} />
+            additionalInputs = ["parameter_select1", "parameter_select2"]
+        break
+        case "histogram":
+            graph = <BarChart chartData={chartData} />
+            additionalInputs = ["parameter_select1", "parameter_select2"]
+        break
+        case "radar":
+            graph = <BarChart chartData={chartData} />
+            additionalInputs = ["parameter_select1", "parameter_select2"]
+        break
+        case "sum":
+            graph = <BarChart chartData={chartData} />
+            additionalInputs = ["parameter_select1", "parameter_select2"]
+        break
+        case "2d":
+            graph = <BarChart chartData={chartData} />
+            additionalInputs = ["parameter_select1", "parameter_select2"]
+        break
     }
 
     const inputProps = {
         "parameter_select1": {
             label: "Select parameter",
             attrs: {
-                placeholder: "Select parameter1"
+                placeholder: "Select parameter1",
+                ...register("parameter1", {required: true}),
             },
-            hook_form_name: "parameter1",
-            hook_form_options: {required: true},
-            options: METER_PARAMETERS
+            options: METER_PARAMETERS,
+            onSelect: (val) => {
+                setValue("parameter1", val)
+                clearErrors("parameter1")
+            },
+            err: errors.parameter1 && (
+                errors.parameter1.type == "required" && "Required*"
+            )
         },
         "parameter_select2": {
             label: "Select parameter",
             attrs: {
-                placeholder: "Select parameter1"
+                placeholder: "Select parameter1",
+                ...register("parameter2", {required: true}),
             },
-            hook_form_name: "parameter2",
-            hook_form_options: {required: true},
-            options: METER_PARAMETERS
+            options: METER_PARAMETERS,
+            onSelect: (val) => {
+                setValue("parameter2", val)
+                clearErrors("parameter2")
+            },
+            err: errors.parameter2 && (
+                errors.parameter2.type == "required" && "Required*"
+            )
         }
     }
 
@@ -64,8 +100,6 @@ export default function AnalyticsCard(props) {
         console.log(data)
     }
 
-
-
     if (loading) {
         return <Loader />
     }
@@ -73,7 +107,8 @@ export default function AnalyticsCard(props) {
     return (
         <div className="border-4 p-4 rounded-md">
             <div className="flex">
-                <DateFilter additionalInputs={_additionalInputs} onSubmitForm={onSubmitForm}/>
+                <form onSubmit={handleSubmit(onSubmitForm)} autoComplete="off"></form>
+                <DateFilter register={register} errors={errors} handleSubmit={handleSubmit} additionalInputs={_additionalInputs} onSubmitForm={onSubmitForm}/>
             </div>
             {graph}
         </div>

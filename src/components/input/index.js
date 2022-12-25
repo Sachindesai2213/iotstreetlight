@@ -2,7 +2,7 @@ import Image from "next/image"
 import { useRef, useState } from "react"
 
 export default function Input(props){
-    const {label, leftIcon, attrs, err, options} = props
+    const {label, leftIcon, attrs, err, options, onSelect} = props
     const inputRef = useRef()
 
     const [showOptions, setShowOptions] = useState(false)
@@ -23,7 +23,8 @@ export default function Input(props){
     }
 
     const onClickOption = (option) => {
-        inputRef.current.value = option.value
+        onSelect(option.value)
+        // inputRef.current.value = option.value
         setShowOptions(false)
     }
 
@@ -33,7 +34,7 @@ export default function Input(props){
                 label && <label htmlFor={inputRef} className="text-xs mb-0.5">{label}</label>
             }
             <div className="relative">
-                <input id={inputRef} ref={inputRef} className={`h-11 border border-lightprimary w-full rounded-md px-5 font-base text-primary transition-all duration-150 focus:bg-grey6 ${leftIcon ? "pl-16" : ""}`} {...attrs} readOnly={!!options}/>
+                <input id={inputRef} className={`h-11 border border-lightprimary w-full rounded-md px-5 font-base text-primary transition-all duration-150 focus:bg-grey6 ${leftIcon ? "pl-16" : ""}`} {...attrs} readOnly={!!options}/>
                 {
                     !!leftIcon && (
                         <div className="absolute left-5 transform -translate-y-1/2 top-1/2 h-6">
