@@ -14,5 +14,8 @@ export const USERS = {
     },
     REPORTS: {
         ALL: ({user_id, start_date, end_date}) => "/api/reports?user_id=" + user_id + "&start_date=" + start_date + "&end_date=" + end_date,
+    },
+    HOURLY_REPORT: {
+        ALL: ({user_id, date, parameter}) => "/api/hourly-report?user_id=" + user_id + "&date=" + date + "&parameter=" + parameter,
     }
 }

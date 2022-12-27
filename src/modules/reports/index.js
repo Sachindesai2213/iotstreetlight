@@ -36,7 +36,6 @@ export default function Reports() {
     const onSubmitForm = (data) => {
         data["user_id"] = user_id;
         setPayload(data);
-        console.log(data);
     };
 
     const reports = user.reports.all(payload);

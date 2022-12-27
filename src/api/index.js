@@ -23,5 +23,8 @@ export const user = {
     },
     reports: {
         all: (payload) => swr(USERS.REPORTS.ALL(payload), () => api.get(USERS.REPORTS.ALL(payload)))
+    },
+    hourlyReport: {
+        all: (payload) => swr(USERS.HOURLY_REPORT.ALL(payload), () => api.get(USERS.HOURLY_REPORT.ALL(payload)))
     }
 }

@@ -3,6 +3,7 @@ import Chart from 'chart.js/auto'; //Error is raised on removal
 
 export default function graphType(props) {
     const { chartData, type } = props;
+    console.log(chartData)
 
     let graph;
 

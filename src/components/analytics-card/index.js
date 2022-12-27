@@ -1,5 +1,7 @@
+import { user } from "@src/api";
 import { METER_PARAMETERS } from "@src/utils/globals";
 import { useState } from "react";
+import { getCookie } from "@src/utils/cookies";
 import { useForm } from "react-hook-form";
 import ChartType from "../chart";
 import DateFilter from "../date-filter";
@@ -7,6 +9,9 @@ import Loader from "../loader";
 
 export default function AnalyticsCard(props) {
     const { text, loading, type } = props;
+    const date = new Date();
+    const iso_date_format = date.toISOString().split("T")[0];
+    const user_id = getCookie("user_id");
 
     const {
         register,
@@ -16,15 +21,21 @@ export default function AnalyticsCard(props) {
         clearErrors,
     } = useForm();
 
-    const [chartData, setChartData] = useState({
-        labels: Array.from({length: 24}, (_, i) => (i + 1).toString()),
-        datasets: [
-            {
-                label: "Data",
-                data: Array.from({length: 24}, (_, i) => (i + 1)),
-            },
-        ],
+    const [payload, setPayload] = useState({
+        user_id: user_id,
+        date: iso_date_format,
+        parameter: 'v_r',
     });
+
+    // const [chartData, setChartData] = useState({
+    //     labels: Array.from({length: 24}, (_, i) => (i + 1).toString()),
+    //     datasets: [
+    //         {
+    //             label: "Data",
+    //             data: Array.from({length: 24}, (_, i) => (0)),
+    //         },
+    //     ],
+    // });
 
     let additionalInputs;
 
@@ -57,16 +68,16 @@ export default function AnalyticsCard(props) {
             label: "Select parameter",
             attrs: {
                 placeholder: "Select parameter1",
-                ...register("parameter1", { required: false }),
+                ...register("parameter", { required: false }),
             },
             options: METER_PARAMETERS,
             onSelect: (val) => {
-                setValue("parameter1", val);
-                clearErrors("parameter1");
+                setValue("parameter", val);
+                clearErrors("parameter");
             },
             err:
-                errors.parameter1 &&
-                errors.parameter1.type == "required" &&
+                errors.parameter &&
+                errors.parameter.type == "required" &&
                 "Required*",
         },
         parameter_select2: {
@@ -104,12 +115,15 @@ export default function AnalyticsCard(props) {
     });
 
     const onSubmitForm = (data) => {
-        console.log(data);
+        data['user_id'] = user_id
+        setPayload(data)
     };
 
     if (loading) {
         return <Loader />;
     }
+
+    const hourly_report = user.hourlyReport.all(payload);
 
     return (
         <div className="border-4 p-4 rounded-md">
@@ -126,7 +140,11 @@ export default function AnalyticsCard(props) {
                     onSubmitForm={onSubmitForm}
                 />
             </div>
-            <ChartType chartData={chartData} type={type} />
+            {!!hourly_report ? (
+                <ChartType chartData={hourly_report.data} type={type} />
+            ) : (
+                <Loader />
+            )}
         </div>
     );
 }
