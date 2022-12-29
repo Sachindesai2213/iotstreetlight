@@ -12,6 +12,8 @@
     "chart.js": "^3.9.1",
     "devextreme": "22.1",
     "devextreme-react": "22.1",
+    "flowbite": "^1.5.5",
+    "flowbite-react": "^0.3.7",
     "js-cookie": "^3.0.1",
     "next": "12.1.6",
     "react": "18.2.0",
@@ -23,7 +25,7 @@
   "devDependencies": {
     "autoprefixer": "^10.4.7",
     "eslint": "8.18.0",
-    "eslint-config-next": "12.1.6",
+    "eslint-config-next": "^13.1.1",
     "postcss": "^8.4.14",
     "tailwindcss": "^3.1.4"
   }

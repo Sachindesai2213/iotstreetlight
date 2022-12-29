@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import ChartType from "../chart";
 import DateFilter from "../date-filter";
 import Loader from "../loader";
+import { Tabs } from "flowbite-react";
 
 export default function AnalyticsCard(props) {
     const { text, loading, type } = props;
@@ -21,45 +22,123 @@ export default function AnalyticsCard(props) {
         clearErrors,
     } = useForm();
 
-    const [payload, setPayload] = useState({
+    const [hourlyPayload, setHourlyPayload] = useState({
         user_id: user_id,
         date: iso_date_format,
-        parameter: 'v_r',
+        parameter: "v_r",
     });
 
-    // const [chartData, setChartData] = useState({
-    //     labels: Array.from({length: 24}, (_, i) => (i + 1).toString()),
-    //     datasets: [
-    //         {
-    //             label: "Data",
-    //             data: Array.from({length: 24}, (_, i) => (0)),
-    //         },
-    //     ],
-    // });
+    const [dailyPayload, setDailyPayload] = useState({
+        user_id: user_id,
+        month: iso_date_format.slice(0, 7),
+        parameter: "v_r",
+    });
 
-    let additionalInputs;
+    const [monthlyPayload, setMonthlyPayload] = useState({
+        user_id: user_id,
+        year: iso_date_format.slice(0, 4),
+        parameter: "v_r",
+    });
+
+    let additionalHourlyInputs;
+    let additionalDailyInputs;
+    let additionalMonthlyInputs;
 
     switch (type) {
         case "bar":
-            additionalInputs = ["date", "parameter_select1"];
+            additionalHourlyInputs = ["date", "parameter_select1"];
+            additionalDailyInputs = ["month", "parameter_select1"];
+            additionalMonthlyInputs = ["year", "parameter_select1"];
             break;
         case "line":
-            additionalInputs = ["date", "parameter_select1"];
+            additionalHourlyInputs = ["date", "parameter_select1"];
+            additionalDailyInputs = ["month", "parameter_select1"];
+            additionalMonthlyInputs = ["year", "parameter_select1"];
             break;
         case "comparison":
-            additionalInputs = ["date", "parameter_select1", "parameter_select2"];
+            additionalHourlyInputs = [
+                "date",
+                "parameter_select1",
+                "parameter_select2",
+            ];
+            additionalDailyInputs = [
+                "month",
+                "parameter_select1",
+                "parameter_select2",
+            ];
+            additionalMonthlyInputs = [
+                "year",
+                "parameter_select1",
+                "parameter_select2",
+            ];
             break;
         case "histogram":
-            additionalInputs = ["date", "parameter_select1", "parameter_select2"];
+            additionalHourlyInputs = [
+                "date",
+                "parameter_select1",
+                "parameter_select2",
+            ];
+            additionalDailyInputs = [
+                "month",
+                "parameter_select1",
+                "parameter_select2",
+            ];
+            additionalMonthlyInputs = [
+                "year",
+                "parameter_select1",
+                "parameter_select2",
+            ];
             break;
         case "radar":
-            additionalInputs = ["date", "parameter_select1", "parameter_select2"];
+            additionalHourlyInputs = [
+                "date",
+                "parameter_select1",
+                "parameter_select2",
+            ];
+            additionalDailyInputs = [
+                "month",
+                "parameter_select1",
+                "parameter_select2",
+            ];
+            additionalMonthlyInputs = [
+                "year",
+                "parameter_select1",
+                "parameter_select2",
+            ];
             break;
         case "sum":
-            additionalInputs = ["date", "parameter_select1", "parameter_select2"];
+            additionalHourlyInputs = [
+                "date",
+                "parameter_select1",
+                "parameter_select2",
+            ];
+            additionalDailyInputs = [
+                "month",
+                "parameter_select1",
+                "parameter_select2",
+            ];
+            additionalMonthlyInputs = [
+                "year",
+                "parameter_select1",
+                "parameter_select2",
+            ];
             break;
         case "2d":
-            additionalInputs = ["date", "parameter_select1", "parameter_select2"];
+            additionalHourlyInputs = [
+                "date",
+                "parameter_select1",
+                "parameter_select2",
+            ];
+            additionalDailyInputs = [
+                "month",
+                "parameter_select1",
+                "parameter_select2",
+            ];
+            additionalMonthlyInputs = [
+                "year",
+                "parameter_select1",
+                "parameter_select2",
+            ];
             break;
     }
 
@@ -96,55 +175,159 @@ export default function AnalyticsCard(props) {
                 errors.parameter2.type == "required" &&
                 "Required*",
         },
-        date: 
-        {
+        date: {
             label: "Date",
             leftIcon: "account-circle-primary",
             attrs: {
                 type: "date",
-                ...register("date", {required: false}),
+                ...register("date", {
+                    value: iso_date_format,
+                    required: false,
+                }),
             },
-            err: errors.date && (
-                errors.date.type == "required" && "Please enter a Date"
-            )
+            err:
+                errors.date &&
+                errors.date.type == "required" &&
+                "Please enter a Date",
+        },
+        month: {
+            label: "Month",
+            leftIcon: "account-circle-primary",
+            attrs: {
+                type: "month",
+                pattern: "[0-9]{4}-[0-9]{2}",
+                ...register("month", {
+                    value: iso_date_format.slice(0, 7),
+                    required: false,
+                }),
+            },
+            err:
+                errors.month &&
+                errors.month.type == "required" &&
+                "Please enter a Month",
+        },
+        year: {
+            label: "Year",
+            leftIcon: "account-circle-primary",
+            attrs: {
+                type: "year",
+                pattern: "[0-9]{4}",
+                ...register("year", {
+                    value: iso_date_format.slice(0, 4),
+                    required: false,
+                }),
+            },
+            err:
+                errors.year &&
+                errors.year.type == "required" &&
+                "Please enter a Year",
         },
     };
 
-    const _additionalInputs = additionalInputs.map((item, key) => {
+    const _additionalHourlyInputs = additionalHourlyInputs.map((item, key) => {
         return inputProps[item];
     });
 
-    const onSubmitForm = (data) => {
-        data['user_id'] = user_id
-        setPayload(data)
+    const _additionalDailyInputs = additionalDailyInputs.map((item, key) => {
+        return inputProps[item];
+    });
+
+    const _additionalMonthlyInputs = additionalMonthlyInputs.map(
+        (item, key) => {
+            return inputProps[item];
+        }
+    );
+
+    const onHourlySubmitForm = (data) => {
+        data["user_id"] = user_id;
+        setHourlyPayload(data);
+    };
+
+    const onDailySubmitForm = (data) => {
+        data["user_id"] = user_id;
+        setDailyPayload(data);
+    };
+
+    const onMonthlySubmitForm = (data) => {
+        data["user_id"] = user_id;
+        setMonthlyPayload(data);
     };
 
     if (loading) {
         return <Loader />;
     }
 
-    const hourly_report = user.hourlyReport.all(payload);
+    const hourly_report = user.hourlyReport.all(hourlyPayload);
+    const daily_report = user.dailyReport.all(dailyPayload);
+    const monthly_report = user.monthlyReport.all(monthlyPayload);
 
     return (
         <div className="border-4 p-4 rounded-md">
-            <div className="flex">
-                <form
-                    onSubmit={handleSubmit(onSubmitForm)}
-                    autoComplete="off"
-                ></form>
-                <DateFilter
-                    register={register}
-                    errors={errors}
-                    handleSubmit={handleSubmit}
-                    additionalInputs={_additionalInputs}
-                    onSubmitForm={onSubmitForm}
-                />
-            </div>
-            {!!hourly_report ? (
-                <ChartType chartData={hourly_report.data} type={type} />
-            ) : (
-                <Loader />
-            )}
+            <Tabs.Group aria-label="Analytics" style="underline">
+                <Tabs.Item active={true} title="Hourly">
+                    <div className="flex">
+                        <form
+                            onSubmit={handleSubmit(onHourlySubmitForm)}
+                            autoComplete="off"
+                        ></form>
+                        <DateFilter
+                            register={register}
+                            errors={errors}
+                            handleSubmit={handleSubmit}
+                            additionalInputs={_additionalHourlyInputs}
+                            onSubmitForm={onHourlySubmitForm}
+                        />
+                    </div>
+                    {!!hourly_report ? (
+                        <ChartType chartData={hourly_report.data} type={type} />
+                    ) : (
+                        <Loader />
+                    )}
+                </Tabs.Item>
+                <Tabs.Item title="Daily">
+                    <div className="flex">
+                        <form
+                            onSubmit={handleSubmit(onDailySubmitForm)}
+                            autoComplete="off"
+                        ></form>
+                        <DateFilter
+                            register={register}
+                            errors={errors}
+                            handleSubmit={handleSubmit}
+                            additionalInputs={_additionalDailyInputs}
+                            onSubmitForm={onDailySubmitForm}
+                        />
+                    </div>
+                    {!!daily_report ? (
+                        <ChartType chartData={daily_report.data} type={type} />
+                    ) : (
+                        <Loader />
+                    )}
+                </Tabs.Item>
+                <Tabs.Item title="Monthly">
+                    <div className="flex">
+                        <form
+                            onSubmit={handleSubmit(onMonthlySubmitForm)}
+                            autoComplete="off"
+                        ></form>
+                        <DateFilter
+                            register={register}
+                            errors={errors}
+                            handleSubmit={handleSubmit}
+                            additionalInputs={_additionalMonthlyInputs}
+                            onSubmitForm={onMonthlySubmitForm}
+                        />
+                    </div>
+                    {!!monthly_report ? (
+                        <ChartType
+                            chartData={monthly_report.data}
+                            type={type}
+                        />
+                    ) : (
+                        <Loader />
+                    )}
+                </Tabs.Item>
+            </Tabs.Group>
         </div>
     );
 }

@@ -26,5 +26,11 @@ export const user = {
     },
     hourlyReport: {
         all: (payload) => swr(USERS.HOURLY_REPORT.ALL(payload), () => api.get(USERS.HOURLY_REPORT.ALL(payload)))
+    },
+    dailyReport: {
+        all: (payload) => swr(USERS.DAILY_REPORT.ALL(payload), () => api.get(USERS.DAILY_REPORT.ALL(payload)))
+    },
+    monthlyReport: {
+        all: (payload) => swr(USERS.MONTHLY_REPORT.ALL(payload), () => api.get(USERS.MONTHLY_REPORT.ALL(payload)))
     }
 }

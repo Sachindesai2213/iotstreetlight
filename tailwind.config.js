@@ -3,6 +3,7 @@ module.exports = {
     content: [
         "./pages/**/*.{js,ts,jsx,tsx}",
         "./src/**/*.{js,ts,jsx,tsx}",
+        "node_modules/flowbite-react/**/*.{js,jsx,ts,tsx}",
     ],
     theme: {
         extend: {
@@ -10,9 +11,9 @@ module.exports = {
                 primary: "#32325D",
                 lightprimary: "#C7CEE1",
                 gray1: "#7A6666",
-                grey6: "#F0F0F0"
-            }
+                grey6: "#F0F0F0",
+            },
         },
     },
-    plugins: [],
+    plugins: [require("flowbite/plugin")],
 };
