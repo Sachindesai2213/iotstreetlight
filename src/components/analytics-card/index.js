@@ -14,6 +14,8 @@ export default function AnalyticsCard(props) {
     const iso_date_format = date.toISOString().split("T")[0];
     const user_id = getCookie("user_id");
 
+    let graph_type = "avg";
+
     const {
         register,
         handleSubmit,
@@ -25,19 +27,25 @@ export default function AnalyticsCard(props) {
     const [hourlyPayload, setHourlyPayload] = useState({
         user_id: user_id,
         date: iso_date_format,
-        parameter: "v_r",
+        parameter_1: "v_r",
+        parameter_2: "",
+        type: "avg",
     });
 
     const [dailyPayload, setDailyPayload] = useState({
         user_id: user_id,
         month: iso_date_format.slice(0, 7),
-        parameter: "v_r",
+        parameter_1: "v_r",
+        parameter_2: "",
+        type: "avg",
     });
 
     const [monthlyPayload, setMonthlyPayload] = useState({
         user_id: user_id,
         year: iso_date_format.slice(0, 4),
-        parameter: "v_r",
+        parameter_1: "v_r",
+        parameter_2: "",
+        type: "avg",
     });
 
     let additionalHourlyInputs;
@@ -107,21 +115,10 @@ export default function AnalyticsCard(props) {
             ];
             break;
         case "sum":
-            additionalHourlyInputs = [
-                "date",
-                "parameter_select1",
-                "parameter_select2",
-            ];
-            additionalDailyInputs = [
-                "month",
-                "parameter_select1",
-                "parameter_select2",
-            ];
-            additionalMonthlyInputs = [
-                "year",
-                "parameter_select1",
-                "parameter_select2",
-            ];
+            additionalHourlyInputs = ["date", "parameter_select1"];
+            additionalDailyInputs = ["month", "parameter_select1"];
+            additionalMonthlyInputs = ["year", "parameter_select1"];
+            graph_type = "sum";
             break;
         case "2d":
             additionalHourlyInputs = [
@@ -147,32 +144,32 @@ export default function AnalyticsCard(props) {
             label: "Select parameter",
             attrs: {
                 placeholder: "Select parameter1",
-                ...register("parameter", { required: false }),
+                ...register("parameter_1", { required: false }),
             },
             options: METER_PARAMETERS,
             onSelect: (val) => {
-                setValue("parameter", val);
-                clearErrors("parameter");
+                setValue("parameter_1", val);
+                clearErrors("parameter_1");
             },
             err:
-                errors.parameter &&
-                errors.parameter.type == "required" &&
+                errors.parameter_1 &&
+                errors.parameter_1.type == "required" &&
                 "Required*",
         },
         parameter_select2: {
             label: "Select parameter",
             attrs: {
-                placeholder: "Select parameter1",
-                ...register("parameter2", { required: false }),
+                placeholder: "Select parameter2",
+                ...register("parameter_2", { required: false }),
             },
             options: METER_PARAMETERS,
             onSelect: (val) => {
-                setValue("parameter2", val);
-                clearErrors("parameter2");
+                setValue("parameter_2", val);
+                clearErrors("parameter_2");
             },
             err:
-                errors.parameter2 &&
-                errors.parameter2.type == "required" &&
+                errors.parameter_2 &&
+                errors.parameter_2.type == "required" &&
                 "Required*",
         },
         date: {
@@ -240,16 +237,31 @@ export default function AnalyticsCard(props) {
 
     const onHourlySubmitForm = (data) => {
         data["user_id"] = user_id;
+        data["type"] = graph_type;
+        data["parameter_2"] =
+            "parameter_2" in data && data["parameter_2"]
+                ? data["parameter_2"]
+                : "";
         setHourlyPayload(data);
     };
 
     const onDailySubmitForm = (data) => {
         data["user_id"] = user_id;
+        data["type"] = graph_type;
+        data["parameter_2"] =
+            "parameter_2" in data && data["parameter_2"]
+                ? data["parameter_2"]
+                : "";
         setDailyPayload(data);
     };
 
     const onMonthlySubmitForm = (data) => {
         data["user_id"] = user_id;
+        data["type"] = graph_type;
+        data["parameter_2"] =
+            "parameter_2" in data && data["parameter_2"]
+                ? data["parameter_2"]
+                : "";
         setMonthlyPayload(data);
     };
 

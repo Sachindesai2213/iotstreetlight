@@ -24,7 +24,7 @@ export default function graphType(props) {
             graph = <Radar data={chartData} />;
             break;
         case "sum":
-            graph = <Bar data={chartData} />;
+            graph = <Line data={chartData} />;
             break;
         case "2d":
             graph = <Bar data={chartData} />;
