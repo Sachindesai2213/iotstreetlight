@@ -24,7 +24,6 @@ export default function Input(props){
 
     const onClickOption = (option) => {
         onSelect(option.value)
-        // inputRef.current.value = option.value
         setShowOptions(false)
     }
 
