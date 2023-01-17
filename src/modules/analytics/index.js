@@ -3,7 +3,7 @@ import Header from "@src/components/header"
 import AnalyticsCard from "@src/components/analytics-card"
 import { useEffect, useState } from "react"
 import AddGraphs from "./partials/add-graphs"
-import { getCookie, setCookie } from "@src/utils/cookies"
+import { deleteCookie, getCookie, setCookie } from "@src/utils/cookies"
 
 export default function Analytics(){
 
@@ -21,8 +21,19 @@ export default function Analytics(){
     }, [storedGraphs])
 
     const onAddGraph = (type) => {
-        setGraphTypes([...graphTypes, type])
-        setCookie("graphs", [...graphTypes, type].join(","))
+        setGraphTypes([type, ...graphTypes])
+        setCookie("graphs", [type, ...graphTypes].join(","))
+    }
+    
+    const onRemoveGraph = (index) => {
+        let temp = graphTypes
+        temp.splice(index, 1)
+        setGraphTypes([...temp])
+        if(temp.length == 0){
+            deleteCookie("graphs")
+            return
+        }
+        setCookie("graphs", [...temp].join(","))
     }
 
     return (
@@ -31,7 +42,7 @@ export default function Analytics(){
             <AddGraphs addGraph={onAddGraph}/>
             <div className="p-5 grid grid-cols-2 gap-3">
                 {
-                    graphTypes.reverse().map((item, key) => <AnalyticsCard type={item} key={key}/>)
+                    graphTypes.map((item, key) => <AnalyticsCard type={item} index={key} key={key} onRemoveGraph={onRemoveGraph}/>)
                 }
             </div>
         </>

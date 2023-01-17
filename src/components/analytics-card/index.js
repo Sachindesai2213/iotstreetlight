@@ -7,9 +7,10 @@ import ChartType from "../chart";
 import DateFilter from "../date-filter";
 import Loader from "../loader";
 import { Tabs } from "flowbite-react";
+import Icon from "../icon";
 
 export default function AnalyticsCard(props) {
-    const { text, loading, type } = props;
+    const { text, loading, type, index, onRemoveGraph } = props;
     const date = new Date();
     const iso_date_format = date.toISOString().split("T")[0];
     const user_id = getCookie("user_id");
@@ -275,6 +276,12 @@ export default function AnalyticsCard(props) {
 
     return (
         <div className="border-4 p-4 rounded-md">
+            <div className="flex items-center justify-between">
+                <p className="capitalize text-sm font-bold text-primary">{type} graph</p>
+                <div onClick={() => onRemoveGraph(index)} className="cursor-pointer">
+                    <Icon icon="close"/>
+                </div>
+            </div>
             <Tabs.Group aria-label="Analytics" style="underline">
                 <Tabs.Item active={true} title="Hourly">
                     <div className="flex">
