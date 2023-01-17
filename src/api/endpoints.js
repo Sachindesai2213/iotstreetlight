@@ -67,4 +67,13 @@ export const USERS = {
             "&type=" +
             type,
     },
+    FAULTS: {
+        ALL: ({ user_id, start_date, end_date }) =>
+            "/api/faults?user_id=" +
+            user_id +
+            "&start_date=" +
+            start_date +
+            "&end_date=" +
+            end_date,
+    },
 };

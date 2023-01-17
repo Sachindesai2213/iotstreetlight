@@ -28,6 +28,11 @@ export default function Nav(props){
             name: "Activities",
             value: "activities",
             link: "/activities"
+        },
+        {
+            name: "Faults",
+            value: "faults",
+            link: "/faults"
         }
     ]
     return (

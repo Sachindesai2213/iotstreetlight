@@ -65,4 +65,10 @@ export const user = {
                 api.get(USERS.MONTHLY_REPORT.ALL(payload))
             ),
     },
+    faults: {
+        all: (payload) =>
+            swr(USERS.FAULTS.ALL(payload), () =>
+                api.get(USERS.FAULTS.ALL(payload))
+            ),
+    },
 };
