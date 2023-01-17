@@ -65,7 +65,9 @@ export default function Analytics(){
                             return <DashboardTopCard {...item} key={key}/>
                         })
                     ) : (
+                        <div className="col-span-4">
                             <Loader />
+                        </div>
                     )}
                 </div>
             </div>
