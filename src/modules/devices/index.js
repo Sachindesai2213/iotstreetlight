@@ -5,9 +5,9 @@ import { getCookie } from "@src/utils/cookies"
 import { isUserLoggedIn } from "@src/utils/functions"
 import { useRouter } from "next/router"
 import { useEffect } from "react"
-import MetersTable from "./partials/meters"
+import DevicesTable from "./partials/devices"
 
-export default function Meters(){
+export default function Devices(){
 
     const router = useRouter()
 
@@ -22,10 +22,10 @@ export default function Meters(){
     const meters = user.meters.all(user_id)
     return (
         <>
-            <Header activeNavItem="meters"/>
+            <Header activeNavItem="devices"/>
             <div>
                 {
-                    !!meters ? <MetersTable meters={meters.data.meters}/> : <Loader/>
+                    !!meters ? <DevicesTable meters={meters.data.meters}/> : <Loader/>
                 }
             </div>
         </>

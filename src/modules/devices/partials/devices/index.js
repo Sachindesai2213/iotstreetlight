@@ -8,7 +8,7 @@ const PERIOD_TYPES = [
     { type: "Automatic" }
 ]
 
-export default function MetersTable(props){
+export default function DevicesTable(props){
     const {meters} = props
     const user_id = getCookie("user_id")
     return (

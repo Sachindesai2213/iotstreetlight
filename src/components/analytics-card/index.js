@@ -8,6 +8,7 @@ import DateFilter from "../date-filter";
 import Loader from "../loader";
 import { Tabs } from "flowbite-react";
 import Icon from "../icon";
+import Input from "../input";
 
 export default function AnalyticsCard(props) {
     const { text, loading, type, index, onRemoveGraph } = props;
@@ -270,6 +271,23 @@ export default function AnalyticsCard(props) {
         return <Loader />;
     }
 
+    const deviceSelect = {
+        label: "Select device",
+        attrs: {
+            placeholder: "Select device",
+            ...register("device", { required: false }),
+        },
+        options: METER_PARAMETERS,
+        onSelect: (val) => {
+            setValue("device", val);
+            clearErrors("device");
+        },
+        err:
+            errors.device &&
+            errors.device.type == "required" &&
+            "Required*",
+    }
+
     const hourly_report = user.hourlyReport.all(hourlyPayload);
     const daily_report = user.dailyReport.all(dailyPayload);
     const monthly_report = user.monthlyReport.all(monthlyPayload);
@@ -289,6 +307,9 @@ export default function AnalyticsCard(props) {
                             onSubmit={handleSubmit(onHourlySubmitForm)}
                             autoComplete="off"
                         ></form>
+                        <div className="mt-2 mr-4">
+                            <Input {...deviceSelect}/>
+                        </div>
                         <DateFilter
                             register={register}
                             errors={errors}

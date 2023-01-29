@@ -20,9 +20,9 @@ export default function Nav(props){
             link: "/analytics"
         },
         {
-            name: "Meters",
-            value: "meters",
-            link: "/meters"
+            name: "Devices",
+            value: "devices",
+            link: "/devices"
         },
         {
             name: "Activities",
