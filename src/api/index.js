@@ -23,16 +23,16 @@ export const user = {
                 api.get(USERS.DASHBOARD_DATA.GET(user_id))
             ),
     },
-    meters: {
+    devices: {
         all: (user_id) =>
-            swr(USERS.METERS.ALL(user_id), () =>
-                api.get(USERS.METERS.ALL(user_id))
+            swr(USERS.DEVICES.ALL(user_id), () =>
+                api.get(USERS.DEVICES.ALL(user_id))
             ),
-        create: (payload) => api.post(USERS.METERS.CREATE, payload),
+        create: (payload) => api.post(USERS.DEVICES.CREATE, payload),
 
         parameters: {
             create: (payload) =>
-                api.post(USERS.METERS.PARAMETERS.CREATE, payload),
+                api.post(USERS.DEVICES.PARAMETERS.CREATE, payload),
         },
     },
     activities: {

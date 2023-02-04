@@ -19,13 +19,13 @@ export default function Devices(){
 
     const user_id = getCookie("user_id")
 
-    const meters = user.meters.all(user_id)
+    const devices = user.devices.all(user_id)
     return (
         <>
             <Header activeNavItem="devices"/>
             <div>
                 {
-                    !!meters ? <DevicesTable meters={meters.data.meters}/> : <Loader/>
+                    !!devices ? <DevicesTable devices={devices.data.devices}/> : <Loader/>
                 }
             </div>
         </>

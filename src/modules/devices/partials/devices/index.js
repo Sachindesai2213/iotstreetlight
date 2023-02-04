@@ -9,12 +9,12 @@ const PERIOD_TYPES = [
 ]
 
 export default function DevicesTable(props){
-    const {meters} = props
+    const {devices} = props
     const user_id = getCookie("user_id")
     return (
         <div className="p-5">
             <DataGrid
-                dataSource={meters || []}
+                dataSource={devices || []}
                 allowColumnReordering
                 allowFiltering
                 rowAlternationEnabled
@@ -22,7 +22,7 @@ export default function DevicesTable(props){
                 showFilterRows
                 onSaved={async (e) => {
                     e.changes[0].data.user_id = user_id
-                    const response = await user.meters.create(e.changes[0].data)
+                    const response = await user.devices.create(e.changes[0].data)
                 }}
             >
                 <Editing
@@ -32,10 +32,7 @@ export default function DevicesTable(props){
                     allowAdding={true} />
                 <FilterRow visible />
                 <HeaderFilter visible />
-                <Column dataField="meter_name" caption="Meter" alignment="center" />
-                <Column dataField="poles_r" caption="Poles R" alignment="center" />
-                <Column dataField="poles_y" caption="Poles Y" alignment="center" />
-                <Column dataField="poles_b" caption="Poles B" alignment="center" />
+                <Column dataField="name" caption="Device" alignment="center" />
                 <Column dataField="group" caption="Group" alignment="center" />
                 <Column dataField="period_type" caption="Period Type" alignment="center">
                     <Lookup

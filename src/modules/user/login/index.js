@@ -58,7 +58,7 @@ function Login() {
         const response = await user.login(data);
         if (response.flash) {
             login_user(response.data);
-            router.push("/meters");
+            router.push("/dashboard");
         } else {
             setErr(response.message);
         }

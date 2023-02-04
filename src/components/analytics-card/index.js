@@ -28,6 +28,7 @@ export default function AnalyticsCard(props) {
 
     const [hourlyPayload, setHourlyPayload] = useState({
         user_id: user_id,
+        device_id: 1,
         date: iso_date_format,
         parameter_1: "v_r",
         parameter_2: "",
@@ -36,6 +37,7 @@ export default function AnalyticsCard(props) {
 
     const [dailyPayload, setDailyPayload] = useState({
         user_id: user_id,
+        device_id: 1,
         month: iso_date_format.slice(0, 7),
         parameter_1: "v_r",
         parameter_2: "",
@@ -44,6 +46,7 @@ export default function AnalyticsCard(props) {
 
     const [monthlyPayload, setMonthlyPayload] = useState({
         user_id: user_id,
+        device_id: 1,
         year: iso_date_format.slice(0, 4),
         parameter_1: "v_r",
         parameter_2: "",
@@ -239,6 +242,7 @@ export default function AnalyticsCard(props) {
 
     const onHourlySubmitForm = (data) => {
         data["user_id"] = user_id;
+        data["device_id"] = 1;
         data["type"] = graph_type;
         data["parameter_2"] =
             "parameter_2" in data && data["parameter_2"]
@@ -249,6 +253,7 @@ export default function AnalyticsCard(props) {
 
     const onDailySubmitForm = (data) => {
         data["user_id"] = user_id;
+        data["device_id"] = 1;
         data["type"] = graph_type;
         data["parameter_2"] =
             "parameter_2" in data && data["parameter_2"]
@@ -259,6 +264,7 @@ export default function AnalyticsCard(props) {
 
     const onMonthlySubmitForm = (data) => {
         data["user_id"] = user_id;
+        data["device_id"] = 1;
         data["type"] = graph_type;
         data["parameter_2"] =
             "parameter_2" in data && data["parameter_2"]

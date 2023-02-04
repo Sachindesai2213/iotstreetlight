@@ -8,30 +8,30 @@ export const USERS = {
     DASHBOARD_DATA: {
         GET: (user_id) => "/api/dashboard-data?user_id=" + user_id,
     },
-    METERS: {
-        ALL: (user_id) => "/api/meters?user_id=" + user_id,
-        CREATE: "/api/meters",
+    DEVICES: {
+        ALL: (user_id) => "/api/devices?user_id=" + user_id,
+        CREATE: "/api/devices",
 
         PARAMETERS: {
-            CREATE: "/api/meter-parameters",
+            CREATE: "/api/device-parameters",
         },
     },
     ACTIVITIES: {
         ALL: (user_id) => "/api/activities?user_id=" + user_id,
     },
     REPORTS: {
-        ALL: ({ user_id, start_date, end_date }) =>
-            "/api/reports?user_id=" +
-            user_id +
+        ALL: ({ device_id, start_date, end_date }) =>
+            "/api/reports?device_id=" +
+            device_id +
             "&start_date=" +
             start_date +
             "&end_date=" +
             end_date,
     },
     HOURLY_REPORT: {
-        ALL: ({ user_id, date, parameter_1, parameter_2, type }) =>
-            "/api/hourly-report?user_id=" +
-            user_id +
+        ALL: ({ device_id, date, parameter_1, parameter_2, type }) =>
+            "/api/hourly-report?device_id=" +
+            device_id +
             "&date=" +
             date +
             "&parameter_1=" +
@@ -42,9 +42,9 @@ export const USERS = {
             type,
     },
     DAILY_REPORT: {
-        ALL: ({ user_id, month, parameter_1, parameter_2, type }) =>
-            "/api/daily-report?user_id=" +
-            user_id +
+        ALL: ({ device_id, month, parameter_1, parameter_2, type }) =>
+            "/api/daily-report?device_id=" +
+            device_id +
             "&month=" +
             month +
             "&parameter_1=" +
@@ -55,9 +55,9 @@ export const USERS = {
             type,
     },
     MONTHLY_REPORT: {
-        ALL: ({ user_id, year, parameter_1, parameter_2, type }) =>
-            "/api/monthly-report?user_id=" +
-            user_id +
+        ALL: ({ device_id, year, parameter_1, parameter_2, type }) =>
+            "/api/monthly-report?device_id=" +
+            device_id +
             "&year=" +
             year +
             "&parameter_1=" +

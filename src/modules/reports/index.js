@@ -23,6 +23,7 @@ export default function Reports() {
     } = useForm();
 
     const [payload, setPayload] = useState({
+        device_id: 1,
         user_id: user_id,
         start_date: iso_date_format,
         end_date: iso_date_format,
@@ -77,7 +78,7 @@ export default function Reports() {
                     </div>
                 </div>
                 {!!reports ? (
-                    <ReportsTable reports={reports.data.reports} />
+                    <ReportsTable reports={reports.data.reports} parameters={reports.data.parameters}/>
                 ) : (
                     <Loader />
                 )}
