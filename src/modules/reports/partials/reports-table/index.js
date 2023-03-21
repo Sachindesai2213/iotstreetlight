@@ -3,9 +3,7 @@ import { getCookie } from "@src/utils/cookies"
 import DataGrid, { Column, FilterRow, HeaderFilter, ColumnChooser, Export } from "devextreme-react/data-grid"
 
 export default function ReportsTable(props){
-    console.log(props)
     const {reports, parameters} = props
-    console.log(reports, parameters)
     const user_id = getCookie("user_id")
     return (
         <div>

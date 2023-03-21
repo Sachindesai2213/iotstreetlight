@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useAppContext } from "@src/context/state";
 
 function Login() {
     const {
@@ -19,6 +20,8 @@ function Login() {
     const [err, setErr] = useState(null);
 
     const router = useRouter();
+
+    const { setDevices } = useAppContext();
 
     const inputs = [
         {
@@ -58,6 +61,7 @@ function Login() {
         const response = await user.login(data);
         if (response.flash) {
             login_user(response.data);
+            setDevices(response.data.devices);
             router.push("/dashboard");
         } else {
             setErr(response.message);

@@ -29,11 +29,17 @@ export const user = {
                 api.get(USERS.DEVICES.ALL(user_id))
             ),
         create: (payload) => api.post(USERS.DEVICES.CREATE, payload),
-
         parameters: {
             create: (payload) =>
                 api.post(USERS.DEVICES.PARAMETERS.CREATE, payload),
         },
+        configurations: {
+            create: (payload) =>
+                api.post(USERS.DEVICES.CONFIGURATIONS.CREATE, payload),
+            push: (payload) => {
+                api.put(USERS.DEVICES.CONFIGURATIONS.PUSH, payload)
+            }
+        }
     },
     activities: {
         all: (user_id) =>

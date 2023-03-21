@@ -15,6 +15,10 @@ export default function AnalyticsCard(props) {
     const date = new Date();
     const iso_date_format = date.toISOString().split("T")[0];
     const user_id = getCookie("user_id");
+    const devices = getCookie("devices") ? JSON.parse(getCookie("devices")) : [];
+    const device = devices ? devices[0] : undefined
+    const device_id = device ? device.id : 1
+    const [deviceParameters, setDeviceParameters] = useState(device ? device.parameters : [])
 
     let graph_type = "avg";
 
@@ -28,27 +32,27 @@ export default function AnalyticsCard(props) {
 
     const [hourlyPayload, setHourlyPayload] = useState({
         user_id: user_id,
-        device_id: 1,
+        device_id: device_id,
         date: iso_date_format,
-        parameter_1: "v_r",
+        parameter_1: device && device.parameters ? device.parameters[0].value : '',
         parameter_2: "",
         type: "avg",
     });
 
     const [dailyPayload, setDailyPayload] = useState({
         user_id: user_id,
-        device_id: 1,
+        device_id: device_id,
         month: iso_date_format.slice(0, 7),
-        parameter_1: "v_r",
+        parameter_1: device && device.parameters ? device.parameters[0].value : '',
         parameter_2: "",
         type: "avg",
     });
 
     const [monthlyPayload, setMonthlyPayload] = useState({
         user_id: user_id,
-        device_id: 1,
+        device_id: device_id,
         year: iso_date_format.slice(0, 4),
-        parameter_1: "v_r",
+        parameter_1: device && device.parameters ? device.parameters[0].value : '',
         parameter_2: "",
         type: "avg",
     });
@@ -59,27 +63,30 @@ export default function AnalyticsCard(props) {
 
     switch (type) {
         case "bar":
-            additionalHourlyInputs = ["date", "parameter_select1"];
-            additionalDailyInputs = ["month", "parameter_select1"];
-            additionalMonthlyInputs = ["year", "parameter_select1"];
+            additionalHourlyInputs = ["device", "date", "parameter_select1"];
+            additionalDailyInputs = ["device", "month", "parameter_select1"];
+            additionalMonthlyInputs = ["device", "year", "parameter_select1"];
             break;
         case "line":
-            additionalHourlyInputs = ["date", "parameter_select1"];
-            additionalDailyInputs = ["month", "parameter_select1"];
-            additionalMonthlyInputs = ["year", "parameter_select1"];
+            additionalHourlyInputs = ["device", "date", "parameter_select1"];
+            additionalDailyInputs = ["device", "month", "parameter_select1"];
+            additionalMonthlyInputs = ["device", "year", "parameter_select1"];
             break;
         case "comparison":
             additionalHourlyInputs = [
+                "device",
                 "date",
                 "parameter_select1",
                 "parameter_select2",
             ];
             additionalDailyInputs = [
+                "device",
                 "month",
                 "parameter_select1",
                 "parameter_select2",
             ];
             additionalMonthlyInputs = [
+                "device",
                 "year",
                 "parameter_select1",
                 "parameter_select2",
@@ -87,16 +94,19 @@ export default function AnalyticsCard(props) {
             break;
         case "histogram":
             additionalHourlyInputs = [
+                "device",
                 "date",
                 "parameter_select1",
                 "parameter_select2",
             ];
             additionalDailyInputs = [
+                "device",
                 "month",
                 "parameter_select1",
                 "parameter_select2",
             ];
             additionalMonthlyInputs = [
+                "device",
                 "year",
                 "parameter_select1",
                 "parameter_select2",
@@ -104,39 +114,45 @@ export default function AnalyticsCard(props) {
             break;
         case "radar":
             additionalHourlyInputs = [
+                "device",
                 "date",
                 "parameter_select1",
                 "parameter_select2",
             ];
             additionalDailyInputs = [
+                "device",
                 "month",
                 "parameter_select1",
                 "parameter_select2",
             ];
             additionalMonthlyInputs = [
+                "device",
                 "year",
                 "parameter_select1",
                 "parameter_select2",
             ];
             break;
         case "sum":
-            additionalHourlyInputs = ["date", "parameter_select1"];
-            additionalDailyInputs = ["month", "parameter_select1"];
-            additionalMonthlyInputs = ["year", "parameter_select1"];
+            additionalHourlyInputs = ["device", "date", "parameter_select1"];
+            additionalDailyInputs = ["device", "month", "parameter_select1"];
+            additionalMonthlyInputs = ["device", "year", "parameter_select1"];
             graph_type = "sum";
             break;
         case "2d":
             additionalHourlyInputs = [
+                "device",
                 "date",
                 "parameter_select1",
                 "parameter_select2",
             ];
             additionalDailyInputs = [
+                "device",
                 "month",
                 "parameter_select1",
                 "parameter_select2",
             ];
             additionalMonthlyInputs = [
+                "device",
                 "year",
                 "parameter_select1",
                 "parameter_select2",
@@ -145,15 +161,35 @@ export default function AnalyticsCard(props) {
     }
 
     const inputProps = {
+        device: {
+            label: "Select device",
+            attrs: {
+                placeholder: "Select parameter1",
+                ...register("device", { required: false }),
+                value: device_id
+            },
+            options: devices,
+            onSelect: (val) => {
+                setValue("device", val.value);
+                clearErrors("device");
+                device = devices.find((device) => device.id == val.value)
+                setDeviceParameters(device ? device.parameters : [])
+            },
+            err:
+                errors.device &&
+                errors.device.type == "required" &&
+                "Required*",
+        },
         parameter_select1: {
             label: "Select parameter",
             attrs: {
                 placeholder: "Select parameter1",
                 ...register("parameter_1", { required: false }),
+                value: device && device.parameters ? device.parameters[0].value : ''
             },
-            options: METER_PARAMETERS,
+            options: deviceParameters,
             onSelect: (val) => {
-                setValue("parameter_1", val);
+                setValue("parameter_1", val.value);
                 clearErrors("parameter_1");
             },
             err:
@@ -167,9 +203,9 @@ export default function AnalyticsCard(props) {
                 placeholder: "Select parameter2",
                 ...register("parameter_2", { required: false }),
             },
-            options: METER_PARAMETERS,
+            options: deviceParameters,
             onSelect: (val) => {
-                setValue("parameter_2", val);
+                setValue("parameter_2", val.value);
                 clearErrors("parameter_2");
             },
             err:
@@ -277,23 +313,6 @@ export default function AnalyticsCard(props) {
         return <Loader />;
     }
 
-    const deviceSelect = {
-        label: "Select device",
-        attrs: {
-            placeholder: "Select device",
-            ...register("device", { required: false }),
-        },
-        options: METER_PARAMETERS,
-        onSelect: (val) => {
-            setValue("device", val);
-            clearErrors("device");
-        },
-        err:
-            errors.device &&
-            errors.device.type == "required" &&
-            "Required*",
-    }
-
     const hourly_report = user.hourlyReport.all(hourlyPayload);
     const daily_report = user.dailyReport.all(dailyPayload);
     const monthly_report = user.monthlyReport.all(monthlyPayload);
@@ -313,9 +332,6 @@ export default function AnalyticsCard(props) {
                             onSubmit={handleSubmit(onHourlySubmitForm)}
                             autoComplete="off"
                         ></form>
-                        <div className="mt-2 mr-4">
-                            <Input {...deviceSelect}/>
-                        </div>
                         <DateFilter
                             register={register}
                             errors={errors}

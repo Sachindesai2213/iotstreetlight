@@ -23,7 +23,7 @@ export default function Input(props){
     }
 
     const onClickOption = (option) => {
-        onSelect(option.value)
+        onSelect(option)
         setShowOptions(false)
     }
 

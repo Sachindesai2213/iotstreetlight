@@ -11,9 +11,12 @@ export const USERS = {
     DEVICES: {
         ALL: (user_id) => "/api/devices?user_id=" + user_id,
         CREATE: "/api/devices",
-
         PARAMETERS: {
             CREATE: "/api/device-parameters",
+        },
+        CONFIGURATIONS: {
+            CREATE: "/api/device-configurations",
+            PUSH: "/api/device-configurations",
         },
     },
     ACTIVITIES: {

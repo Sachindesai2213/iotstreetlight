@@ -8,17 +8,21 @@ import { useEffect, useState } from "react";
 import ReportsTable from "./partials/reports-table";
 import DateFilter from "@src/components/date-filter";
 import { useForm } from "react-hook-form";
-import Input from "@src/components/input";
 
 export default function Reports() {
     const date = new Date();
     const iso_date_format = date.toISOString().split("T")[0];
     const user_id = getCookie("user_id");
+    const devices = getCookie("devices") ? JSON.parse(getCookie("devices")) : [];
     const router = useRouter();
+    const start_date={iso_date_format}
+    const end_date={iso_date_format}
 
     const {
         register,
         handleSubmit,
+        setValue,
+        clearErrors,
         formState: { errors },
     } = useForm();
 
@@ -30,28 +34,58 @@ export default function Reports() {
     });
 
     useEffect(() => {
+        console.log(getCookie("devices"))
         if (!isUserLoggedIn()) {
             router.push(`/login?target=${router.asPath}`);
         }
     }, []);
 
     const reports = user.reports.all(payload);
-    const deviceSelect = {
-        label: "Select device",
-        attrs: {
-            placeholder: "Select device",
-            ...register("device", { required: false }),
+    const _additionalInputs = [
+        {
+            label: "Select device",
+            attrs: {
+                placeholder: "Select device",
+                ...register("device_id", { required: false }),
+            },
+            options: devices,
+            onSelect: (val) => {
+                setValue("device_id", val.value);
+                clearErrors("device_id");
+            },
+            err:
+                errors.device_id &&
+                errors.device_id.type == "required" &&
+                "Required*",
         },
-        options: [],
-        onSelect: (val) => {
-            setValue("device", val);
-            clearErrors("device");
+        {
+            label: "Start Date",
+            leftIcon: "account-circle-primary",
+            attrs: {
+                type: "date",
+                ...register("start_date", {
+                    required: true,
+                    value: start_date,
+                }),
+            },
+            err:
+                errors.start_date &&
+                errors.start_date.type == "required" &&
+                "Please enter a Start Date",
         },
-        err:
-            errors.device &&
-            errors.device.type == "required" &&
-            "Required*",
-    }
+        {
+            label: "End Date",
+            leftIcon: "account-circle-primary",
+            attrs: {
+                type: "date",
+                ...register("end_date", { required: true, value: end_date }),
+            },
+            err:
+                errors.end_date &&
+                errors.end_date.type == "required" &&
+                "Please enter a End Date",
+        },
+    ];
 
     const onSubmitForm = (data) => {
         data["user_id"] = user_id;
@@ -63,22 +97,21 @@ export default function Reports() {
             <div className="p-5">
                 <form onSubmit={handleSubmit(onSubmitForm)}></form>
                 <div className="grid grid-cols-4 gap-4">
-                    <div className="mt-2">
-                        <Input {...deviceSelect}/>
-                    </div>
-                    <div className="col-span-3">
+                    <div className="col-span-4 relative z-10">
                         <DateFilter
                             register={register}
                             errors={errors}
+                            additionalInputs={_additionalInputs}
                             handleSubmit={handleSubmit}
                             onSubmitForm={onSubmitForm}
-                            start_date={iso_date_format}
-                            end_date={iso_date_format}
                         />
                     </div>
                 </div>
                 {!!reports ? (
-                    <ReportsTable reports={reports.data.reports} parameters={reports.data.parameters}/>
+                    <ReportsTable
+                        reports={reports.data.reports}
+                        parameters={reports.data.parameters}
+                    />
                 ) : (
                     <Loader />
                 )}

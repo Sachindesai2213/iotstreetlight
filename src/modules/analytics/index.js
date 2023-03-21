@@ -1,17 +1,17 @@
-import Loader from "@src/components/loader"
 import Header from "@src/components/header"
 import AnalyticsCard from "@src/components/analytics-card"
 import { useEffect, useState } from "react"
 import AddGraphs from "./partials/add-graphs"
 import { deleteCookie, getCookie, setCookie } from "@src/utils/cookies"
+import { isUserLoggedIn } from "@src/utils/functions"
 
 export default function Analytics(){
 
-    // useEffect(() => {
-    //     if(!isUserLoggedIn()){
-    //         router.push(`/login?target=${router.asPath}`)
-    //     }
-    // }, [])
+    useEffect(() => {
+        if(!isUserLoggedIn()){
+            router.push(`/login?target=${router.asPath}`)
+        }
+    }, [])
 
     const storedGraphs = getCookie("graphs")
     const [graphTypes, setGraphTypes] = useState([])

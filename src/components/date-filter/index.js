@@ -44,7 +44,7 @@ export default function DateFilter(props) {
 
     return (
         <div className="py-2">
-            <div className="grid grid-cols-3 gap-x-4 gap-y-2 items-end">
+            <div className="grid grid-cols-4 gap-x-4 gap-y-2 items-end">
                 {inputs.map((item, key) => {
                     return (
                         <div key={key}>
