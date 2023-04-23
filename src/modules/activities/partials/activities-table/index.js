@@ -17,7 +17,7 @@ export default function ActivitiesTable(props){
             >
                 <FilterRow visible />
                 <HeaderFilter visible />
-                <Column dataField="name" caption="Name" alignment="center" />
+                <Column dataField="user.first_name" caption="Name" alignment="center" />
                 <Column dataField="type" caption="Type" alignment="center" />
                 <Column dataField="timestamp" caption="Timestamp" alignment="center" />
             </DataGrid>

@@ -1,5 +1,5 @@
 export const USERS = {
-    LOGIN: "/api/login",
+    LOGIN: "/api/token",
     SIGNUP: "/api/signup",
     PROFILE: {
         GET: (user_id) => "/api/profile?user_id=" + user_id,

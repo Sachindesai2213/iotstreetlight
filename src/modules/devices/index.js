@@ -25,7 +25,7 @@ export default function Devices(){
             <Header activeNavItem="devices"/>
             <div>
                 {
-                    !!devices ? <DevicesTable devices={devices.data.devices}/> : <Loader/>
+                    !!devices ? <DevicesTable devices={devices.data}/> : <Loader/>
                 }
             </div>
         </>

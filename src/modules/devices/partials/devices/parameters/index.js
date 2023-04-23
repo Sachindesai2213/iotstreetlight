@@ -15,7 +15,7 @@ const NOTIFY_OPTIONS = [{ type: "Yes" }, { type: "No" }];
 export default function Parameters(props) {
     const {
         data: {
-            data: { id, parameters, configurations },
+            data: { id, device_parameters, device_configurations },
         },
     } = props;
 
@@ -24,7 +24,7 @@ export default function Parameters(props) {
     return (
         <div className="grid grid-cols-2 gap-3">
             <DataGrid
-                dataSource={parameters || []}
+                dataSource={device_parameters || []}
                 allowColumnReordering
                 allowFiltering
                 rowAlternationEnabled
@@ -75,7 +75,7 @@ export default function Parameters(props) {
                 </Column>
             </DataGrid>
             <DataGrid
-                dataSource={configurations || []}
+                dataSource={device_configurations || []}
                 allowColumnReordering
                 allowFiltering
                 rowAlternationEnabled

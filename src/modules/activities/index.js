@@ -20,12 +20,13 @@ export default function Activities(){
     const user_id = getCookie("user_id")
 
     const activities = user.activities.all(user_id)
+    console.log(activities)
     return (
         <>
             <Header activeNavItem="activities"/>
             <div>
                 {
-                    !!activities ? <ActivitiesTable activities={activities.data.activities}/> : <Loader/>
+                    !!activities ? <ActivitiesTable activities={activities.data}/> : <Loader/>
                 }
             </div>
         </>

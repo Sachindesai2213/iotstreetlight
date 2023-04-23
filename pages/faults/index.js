@@ -3,7 +3,7 @@ import { isUserLoggedIn } from "@src/utils/functions";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 
-export default function MetersPage() {
+export default function FaultsPage() {
 
     const router = useRouter()
 

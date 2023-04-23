@@ -1,7 +1,6 @@
 import Input from "@components/input";
 import { user } from "@src/api";
 import Button from "@src/components/button";
-import { login_user } from "@src/utils/functions";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -21,7 +20,7 @@ function Login() {
 
     const router = useRouter();
 
-    const { setDevices } = useAppContext();
+    const { setToken } = useAppContext();
 
     const inputs = [
         {
@@ -55,13 +54,14 @@ function Login() {
         },
     ];
 
-    const login = async (data) => {
+    const login = async (loginData) => {
         setLoading(true);
         setErr(null);
-        const response = await user.login(data);
-        if (response.flash) {
-            login_user(response.data);
-            setDevices(response.data.devices);
+        const { data, status, statusText } = await user.login(loginData);
+        if (status == 200) {
+            setToken(data.access);
+            window.localStorage.setItem("token", data.access);
+            window.localStorage.setItem("refresh_token", data.refresh);
             router.push("/dashboard");
         } else {
             setErr(response.message);

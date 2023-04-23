@@ -2,7 +2,7 @@ import Icon from "../icon"
 import Loader from "../loader"
 
 export default function Button(props){
-    const {text, variant, attrs, loading, icon, isIconButton, additionalClasses, onClick} = props
+    const {text, variant, attrs, loading, icon, isIconButton, additionalClasses} = props
 
     let btnClass = "hover:bg-lightprimary"
     let textClass = ""
@@ -25,7 +25,7 @@ export default function Button(props){
         return <Loader/>
     }
     return (
-        <button className={`flex items-center justify-center h-11 ${isIconButton ? "w-11 rounded-full" : "px-5 w-full rounded-md"} transition-all duration-100 ${btnClass} ${additionalClasses}`} {...attrs} onClick={onClick}> 
+        <button className={`flex items-center justify-center h-11 ${isIconButton ? "w-11 rounded-full" : "px-5 w-full rounded-md"} transition-all duration-100 ${btnClass} ${additionalClasses}`} {...attrs}> 
             {
                 !!text && <p className={`text-base ${textClass}`}>{text}</p>
             }

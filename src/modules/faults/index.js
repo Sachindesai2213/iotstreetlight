@@ -53,7 +53,7 @@ export default function Reports() {
                     end_date={iso_date_format}
                 />
                 {!!faults ? (
-                    <FaultsTable faults={faults.data.faults} />
+                    <FaultsTable faults={faults.data} />
                 ) : (
                     <Loader />
                 )}

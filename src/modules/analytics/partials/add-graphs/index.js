@@ -41,7 +41,7 @@ export default function AddGraphs(props){
         }
     ]
     return (
-        <div className="flex items-center p-5">
+        <div className="flex justify-center items-center p-5">
             {
                 GRAPHS.map((item, key) => {
                     return (

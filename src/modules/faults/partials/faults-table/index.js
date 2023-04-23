@@ -16,7 +16,7 @@ export default function FaultsTable(props){
                 <FilterRow visible />
                 <HeaderFilter visible />
                 <Export enabled={true} />
-                <Column dataField="device__name" caption="Device" alignment="center" />
+                <Column dataField="device_name" caption="Device" alignment="center" />
                 <Column dataField="fault_desc" caption="Description" alignment="center" />
                 <Column dataField="fault_loc" caption="Location" alignment="center" />
                 <Column dataField="created_on" caption="Created On" alignment="center" />

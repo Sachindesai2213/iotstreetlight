@@ -1,69 +1,41 @@
 import { user } from "@src/api";
 import Loader from "@src/components/loader";
-import DashboardTopCard from "@src/components/dashboard-top-card"
-import Header from "@src/components/header"
-import { isUserLoggedIn } from "@src/utils/functions"
-import { useRouter } from "next/router"
-import { useEffect } from "react"
+import DashboardTopCard from "@src/components/dashboard-top-card";
+import Header from "@src/components/header";
+import { isUserLoggedIn } from "@src/utils/functions";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 import { getCookie } from "@src/utils/cookies";
+import { GoogleMap, LoadScript, MarkerF } from "@react-google-maps/api";
 
-export default function Analytics(){
-    const router = useRouter()
+export default function Dashboard() {
+    const router = useRouter();
+
+    const center = {
+        lat: 19.07609,
+        lng: 72.877426,
+    };
 
     useEffect(() => {
-        if(!isUserLoggedIn()){
-            router.push(`/login?target=${router.asPath}`)
+        if (!isUserLoggedIn()) {
+            router.push(`/login?target=${router.asPath}`);
         }
-    }, [])
+    }, []);
 
     const user_id = getCookie("user_id");
 
-    const cards = user.dashboardData.get(user_id)
-
-    // const TOP_CARDS = [
-    //     {
-    //         title: "TODAY",
-    //         value: "₹ 53000",
-    //         isIncreased: true,
-    //         percentage: 30,
-    //         icon: "usage",
-    //         link: "/reports"
-    //     },
-    //     {
-    //         title: "POWER",
-    //         value: "₹ 53000",
-    //         isIncreased: true,
-    //         percentage: 30,
-    //         icon: "power",
-    //         link: "/reports"
-    //     },
-    //     {
-    //         title: "ACTIVE METERS",
-    //         value: "₹ 53000",
-    //         isIncreased: true,
-    //         percentage: 30,
-    //         icon: "meters",
-    //         link: "/meters"
-    //     },
-    //     {
-    //         title: "FAULTS",
-    //         value: "₹ 53000",
-    //         isIncreased: true,
-    //         percentage: 30,
-    //         icon: "faults",
-    //         link: "/faults"
-    //     }
-    // ]
+    const cards = user.dashboardData.get(user_id);
+    console.log(cards)
 
     return (
         <>
-            <Header activeNavItem="dashboard"/>
+            <Header activeNavItem="dashboard" />
             <div className="p-8 bg-lightprimary">
                 <div className="grid grid-cols-4 gap-8">
                     {!!cards ? (
-                        cards.data.map((item, key) => {
-                            return <DashboardTopCard {...item} key={key}/>
-                        })
+                        cards.data.dashboard_data.map((item, key) => (
+                            <DashboardTopCard {...item} key={key} />
+                        ))
                     ) : (
                         <div className="col-span-4">
                             <Loader />
@@ -71,6 +43,26 @@ export default function Analytics(){
                     )}
                 </div>
             </div>
+            <div className="p-4">
+                <LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_MAPS_KEY}>
+                    <GoogleMap
+                        zoom={11}
+                        center={center}
+                        mapContainerStyle={{ height: "500px" }}
+                        onLoad={(map) => {
+                            console.log("Map is ready");
+                        }}
+                    >
+                        {!!cards ? (
+                            cards.data.devices.map(({latitude, longitude}, key) => (
+                                <MarkerF position={{lat: parseFloat(latitude), lng: parseFloat(longitude)}} key={key}/>
+                            ))
+                        ) : (
+                            <></>
+                        )}
+                    </GoogleMap>
+                </LoadScript>
+            </div>
         </>
-    )
+    );
 }
