@@ -28,6 +28,9 @@ const instance = axios.create({
 });
 
 instance.interceptors.request.use(async (req) => {
+
+    console.log(req)
+
     if (!auth_token) {
         auth_token = window?.localStorage?.getItem("token")
             ? window?.localStorage?.getItem("token")
@@ -37,6 +40,8 @@ instance.interceptors.request.use(async (req) => {
             ? window?.localStorage?.getItem("refresh_token")
             : null;
     }
+
+    if (!auth_token) return req;
 
     const user = jwt_decode(auth_token);
     const isExpired = dayjs.unix(user.exp).diff(dayjs()) < 1;

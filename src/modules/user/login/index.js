@@ -57,11 +57,11 @@ function Login() {
     const login = async (loginData) => {
         setLoading(true);
         setErr(null);
-        const { data, status, statusText } = await user.login(loginData);
-        if (status == 200) {
-            setToken(data.access)
-            window.localStorage.setItem("token", data.access);
-            window.localStorage.setItem("refresh_token", data.refresh);
+        const response = await user.login(loginData);
+        if (response.status == 200) {
+            setToken(response.data.access)
+            window.localStorage.setItem("token", response.data.access);
+            window.localStorage.setItem("refresh_token", response.data.refresh);
             router.push("/dashboard");
         } else {
             setErr(response.message);
