@@ -5,7 +5,6 @@ import Header from "@src/components/header";
 import { isUserLoggedIn } from "@src/utils/functions";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
-import { getCookie } from "@src/utils/cookies";
 import { GoogleMap, LoadScript, MarkerF } from "@react-google-maps/api";
 
 export default function Dashboard() {
@@ -22,10 +21,7 @@ export default function Dashboard() {
         }
     }, []);
 
-    const user_id = getCookie("user_id");
-
-    const cards = user.dashboardData.get(user_id);
-    console.log(cards)
+    const cards = user.dashboardData.get();
 
     return (
         <>
@@ -33,7 +29,7 @@ export default function Dashboard() {
             <div className="p-8 bg-lightprimary">
                 <div className="grid grid-cols-4 gap-8">
                     {!!cards ? (
-                        cards.data.dashboard_data.map((item, key) => (
+                        cards?.data?.dashboard_data?.map((item, key) => (
                             <DashboardTopCard {...item} key={key} />
                         ))
                     ) : (
@@ -43,7 +39,7 @@ export default function Dashboard() {
                     )}
                 </div>
             </div>
-            <div className="p-4">
+            {/* <div className="p-4">
                 <LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_MAPS_KEY}>
                     <GoogleMap
                         zoom={11}
@@ -54,7 +50,7 @@ export default function Dashboard() {
                         }}
                     >
                         {!!cards ? (
-                            cards.data.devices.map(({latitude, longitude}, key) => (
+                            cards?.data?.devices?.map(({latitude, longitude}, key) => (
                                 <MarkerF position={{lat: parseFloat(latitude), lng: parseFloat(longitude)}} key={key}/>
                             ))
                         ) : (
@@ -62,7 +58,7 @@ export default function Dashboard() {
                         )}
                     </GoogleMap>
                 </LoadScript>
-            </div>
+            </div> */}
         </>
     );
 }

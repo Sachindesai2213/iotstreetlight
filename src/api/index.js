@@ -11,22 +11,22 @@ export const user = {
     login: (payload) => api.post(USERS.LOGIN, payload),
     signup: (payload) => api.post(USERS.SIGNUP, payload),
     profile: {
-        get: (user_id) =>
-            swr(USERS.PROFILE.GET(user_id), () =>
-                api.get(USERS.PROFILE.GET(user_id))
+        get: () =>
+            swr(USERS.PROFILE.GET(), () =>
+                api.get(USERS.PROFILE.GET())
             ),
         update: (payload) => api.post(USERS.PROFILE.UPDATE, payload),
     },
     dashboardData: {
-        get: (user_id) =>
-            swr(USERS.DASHBOARD_DATA.GET(user_id), () =>
-                api.get(USERS.DASHBOARD_DATA.GET(user_id))
+        get: () =>
+            swr(USERS.DASHBOARD_DATA.GET(), () =>
+                api.get(USERS.DASHBOARD_DATA.GET())
             ),
     },
     devices: {
-        all: (user_id) =>
-            swr(USERS.DEVICES.ALL(user_id), () =>
-                api.get(USERS.DEVICES.ALL(user_id))
+        all: () =>
+            swr(USERS.DEVICES.ALL(), () =>
+                api.get(USERS.DEVICES.ALL())
             ),
         create: (payload) => api.post(USERS.DEVICES.CREATE, payload),
         parameters: {
@@ -53,22 +53,10 @@ export const user = {
                 api.get(USERS.REPORTS.ALL(payload))
             ),
     },
-    hourlyReport: {
+    intervalReport: {
         all: (payload) =>
-            swr(USERS.HOURLY_REPORT.ALL(payload), () =>
-                api.get(USERS.HOURLY_REPORT.ALL(payload))
-            ),
-    },
-    dailyReport: {
-        all: (payload) =>
-            swr(USERS.DAILY_REPORT.ALL(payload), () =>
-                api.get(USERS.DAILY_REPORT.ALL(payload))
-            ),
-    },
-    monthlyReport: {
-        all: (payload) =>
-            swr(USERS.MONTHLY_REPORT.ALL(payload), () =>
-                api.get(USERS.MONTHLY_REPORT.ALL(payload))
+            swr(USERS.INTERVAL_REPORT.ALL(payload), () =>
+                api.get(USERS.INTERVAL_REPORT.ALL(payload))
             ),
     },
     faults: {

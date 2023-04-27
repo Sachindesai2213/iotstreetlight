@@ -1,33 +1,72 @@
 import axios from "axios";
+import jwt_decode from "jwt-decode";
+import dayjs from "dayjs";
+import { deleteCookie } from "../utils/cookies";
+// import { useRouter } from "next/router";
+// import { useAppContext } from "@src/context/state";
+
+// const router = useRouter()
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-let token = typeof window !== "undefined" ? window?.localStorage?.getItem("token") : null;
+// const { token } = useAppContext();
+
+let auth_token =
+    typeof window !== "undefined"
+        ? window?.localStorage?.getItem("token")
+        : null;
+
+let refresh_token =
+    typeof window !== "undefined"
+        ? window?.localStorage?.getItem("refresh_token")
+        : null;
 
 const instance = axios.create({
     baseURL: API_URL,
     timeout: 1000,
-    headers: { Authorization: `Bearer ${token}` },
+    headers: { Authorization: `Bearer ${auth_token}` },
 });
 
-instance.interceptors.request.use(async req => {
-    // if(!token){
-    //     token = localStorage.getItem('token') ? JSON.parse(localStorage.getItem('token')) : null
-    //     req.headers.Authorization = `Bearer ${token?.access}`
-    // }
+instance.interceptors.request.use(async (req) => {
+    if (!auth_token) {
+        auth_token = window?.localStorage?.getItem("token")
+            ? window?.localStorage?.getItem("token")
+            : null;
 
-    // const user = jwt_decode(token)
-    // const isExpired = dayjs.unix(user.exp).diff(dayjs()) < 1;
+        let refresh_token = window?.localStorage?.getItem("refresh_token")
+            ? window?.localStorage?.getItem("refresh_token")
+            : null;
+    }
 
-    // if(!isExpired) return req
+    const user = jwt_decode(auth_token);
+    const isExpired = dayjs.unix(user.exp).diff(dayjs()) < 1;
 
-    // const response = await axios.post(`${baseURL}/api/token/refresh/`, {
-    //     refresh: token.refresh
-    // });
+    console.log(user);
 
-    // localStorage.setItem('token', JSON.stringify(response.data))
-    // req.headers.Authorization = `Bearer ${response.data.access}`
-    return req
-})
+    req.headers.Authorization = `Bearer ${auth_token}`;
+
+    if (!isExpired || !auth_token) return req;
+
+    console.log("Expired");
+
+    const { data, status } = await axios.post(`${API_URL}/api/token/refresh`, {
+        refresh: refresh_token,
+    });
+
+    console.log(status);
+
+    if (status != 200) {
+        window.localStorage.removeItem("token");
+        window.localStorage.removeItem("refresh_token");
+        deleteCookie("user_id");
+        // router.push('/login')
+    }
+
+    auth_token = data.access;
+
+    localStorage.setItem("token", auth_token);
+    req.headers.Authorization = `Bearer ${auth_token}`;
+    return req;
+});
 
 export default instance;

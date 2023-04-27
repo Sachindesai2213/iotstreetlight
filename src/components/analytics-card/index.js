@@ -8,7 +8,6 @@ import DateFilter from "../date-filter";
 import Loader from "../loader";
 import { Tabs } from "flowbite-react";
 import Icon from "../icon";
-import Input from "../input";
 
 export default function AnalyticsCard(props) {
     const { text, loading, type, index, onRemoveGraph } = props;
@@ -16,9 +15,10 @@ export default function AnalyticsCard(props) {
     const iso_date_format = date.toISOString().split("T")[0];
     const user_id = getCookie("user_id");
     const devices = getCookie("devices") ? JSON.parse(getCookie("devices")) : [];
+    console.log(devices)
     const device = devices ? devices[0] : undefined
     const device_id = device ? device.id : 1
-    const [deviceParameters, setDeviceParameters] = useState(device ? device.parameters : [])
+    const [deviceParameters, setDeviceParameters] = useState(device ? device.device_parameters : [])
 
     let graph_type = "avg";
 
@@ -34,27 +34,30 @@ export default function AnalyticsCard(props) {
         user_id: user_id,
         device_id: device_id,
         date: iso_date_format,
-        parameter_1: device && device.parameters ? device.parameters[0].value : '',
+        parameter_1: device && device.device_parameters ? device.device_parameters[0].key : '',
         parameter_2: "",
         type: "avg",
+        interval: "hourly",
     });
 
     const [dailyPayload, setDailyPayload] = useState({
         user_id: user_id,
         device_id: device_id,
         month: iso_date_format.slice(0, 7),
-        parameter_1: device && device.parameters ? device.parameters[0].value : '',
+        parameter_1: device && device.device_parameters ? device.device_parameters[0].key : '',
         parameter_2: "",
         type: "avg",
+        interval: "daily",
     });
 
     const [monthlyPayload, setMonthlyPayload] = useState({
         user_id: user_id,
         device_id: device_id,
         year: iso_date_format.slice(0, 4),
-        parameter_1: device && device.parameters ? device.parameters[0].value : '',
+        parameter_1: device && device.device_parameters ? device.device_parameters[0].key : '',
         parameter_2: "",
         type: "avg",
+        interval: "monthly",
     });
 
     let additionalHourlyInputs;
@@ -170,10 +173,10 @@ export default function AnalyticsCard(props) {
             },
             options: devices,
             onSelect: (val) => {
-                setValue("device", val.value);
+                setValue("device", val.id);
                 clearErrors("device");
-                device = devices.find((device) => device.id == val.value)
-                setDeviceParameters(device ? device.parameters : [])
+                device = devices.find((device) => device.id == val.id)
+                setDeviceParameters(device ? device.device_parameters : [])
             },
             err:
                 errors.device &&
@@ -185,11 +188,12 @@ export default function AnalyticsCard(props) {
             attrs: {
                 placeholder: "Select parameter1",
                 ...register("parameter_1", { required: false }),
-                value: device && device.parameters ? device.parameters[0].value : ''
+                value: device && device.device_parameters ? device.device_parameters[0].key : ''
             },
             options: deviceParameters,
             onSelect: (val) => {
-                setValue("parameter_1", val.value);
+                console.log(val)
+                setValue("parameter_1", val.key);
                 clearErrors("parameter_1");
             },
             err:
@@ -205,7 +209,7 @@ export default function AnalyticsCard(props) {
             },
             options: deviceParameters,
             onSelect: (val) => {
-                setValue("parameter_2", val.value);
+                setValue("parameter_2", val.key);
                 clearErrors("parameter_2");
             },
             err:
@@ -313,9 +317,9 @@ export default function AnalyticsCard(props) {
         return <Loader />;
     }
 
-    const hourly_report = user.hourlyReport.all(hourlyPayload);
-    const daily_report = user.dailyReport.all(dailyPayload);
-    const monthly_report = user.monthlyReport.all(monthlyPayload);
+    const hourly_report = user.intervalReport.all(hourlyPayload);
+    const daily_report = user.intervalReport.all(dailyPayload);
+    const monthly_report = user.intervalReport.all(monthlyPayload);
 
     return (
         <div className="border-4 p-4 rounded-md">

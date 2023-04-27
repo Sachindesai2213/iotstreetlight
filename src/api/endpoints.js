@@ -2,14 +2,14 @@ export const USERS = {
     LOGIN: "/api/token",
     SIGNUP: "/api/signup",
     PROFILE: {
-        GET: (user_id) => "/api/profile?user_id=" + user_id,
+        GET: () => "/api/profile",
         UPDATE: "/api/profile",
     },
     DASHBOARD_DATA: {
-        GET: (user_id) => "/api/dashboard-data?user_id=" + user_id,
+        GET: () => "/api/dashboard-data",
     },
     DEVICES: {
-        ALL: (user_id) => "/api/devices?user_id=" + user_id,
+        ALL: () => "/api/devices",
         CREATE: "/api/devices",
         PARAMETERS: {
             CREATE: "/api/device-parameters",
@@ -20,7 +20,7 @@ export const USERS = {
         },
     },
     ACTIVITIES: {
-        ALL: (user_id) => "/api/activities?user_id=" + user_id,
+        ALL: "/api/activities",
     },
     REPORTS: {
         ALL: ({ device_id, start_date, end_date }) =>
@@ -31,36 +31,14 @@ export const USERS = {
             "&end_date=" +
             end_date,
     },
-    HOURLY_REPORT: {
-        ALL: ({ device_id, date, parameter_1, parameter_2, type }) =>
-            "/api/hourly-report?device_id=" +
+    INTERVAL_REPORT: {
+        ALL: ({ device_id, date, month, year, parameter_1, parameter_2, type, interval }) =>
+            "/api/interval-report?device_id=" +
             device_id +
             "&date=" +
             date +
-            "&parameter_1=" +
-            parameter_1 +
-            "&parameter_2=" +
-            parameter_2 +
-            "&type=" +
-            type,
-    },
-    DAILY_REPORT: {
-        ALL: ({ device_id, month, parameter_1, parameter_2, type }) =>
-            "/api/daily-report?device_id=" +
-            device_id +
             "&month=" +
             month +
-            "&parameter_1=" +
-            parameter_1 +
-            "&parameter_2=" +
-            parameter_2 +
-            "&type=" +
-            type,
-    },
-    MONTHLY_REPORT: {
-        ALL: ({ device_id, year, parameter_1, parameter_2, type }) =>
-            "/api/monthly-report?device_id=" +
-            device_id +
             "&year=" +
             year +
             "&parameter_1=" +
@@ -68,13 +46,13 @@ export const USERS = {
             "&parameter_2=" +
             parameter_2 +
             "&type=" +
-            type,
+            type +
+            "&interval=" +
+            interval,
     },
     FAULTS: {
-        ALL: ({ user_id, start_date, end_date }) =>
-            "/api/faults?user_id=" +
-            user_id +
-            "&start_date=" +
+        ALL: ({ start_date, end_date }) =>
+            "/api/faults?start_date=" +
             start_date +
             "&end_date=" +
             end_date,

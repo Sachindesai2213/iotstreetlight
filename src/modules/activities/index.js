@@ -17,10 +17,7 @@ export default function Activities(){
         }
     }, [])
 
-    const user_id = getCookie("user_id")
-
-    const activities = user.activities.all(user_id)
-    console.log(activities)
+    const activities = user.activities.all()
     return (
         <>
             <Header activeNavItem="activities"/>

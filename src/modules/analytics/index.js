@@ -21,7 +21,6 @@ export default function Analytics(){
     }, [storedGraphs])
 
     const onAddGraph = (type) => {
-        console.log(type)
         setGraphTypes([type, ...graphTypes])
         setCookie("graphs", [type, ...graphTypes].join(","))
     }

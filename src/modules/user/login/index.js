@@ -20,7 +20,7 @@ function Login() {
 
     const router = useRouter();
 
-    const { setToken } = useAppContext();
+    const { setToken } = useAppContext()
 
     const inputs = [
         {
@@ -59,7 +59,7 @@ function Login() {
         setErr(null);
         const { data, status, statusText } = await user.login(loginData);
         if (status == 200) {
-            setToken(data.access);
+            setToken(data.access)
             window.localStorage.setItem("token", data.access);
             window.localStorage.setItem("refresh_token", data.refresh);
             router.push("/dashboard");

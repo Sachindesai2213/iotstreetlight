@@ -34,7 +34,6 @@ export default function Reports() {
     });
 
     useEffect(() => {
-        console.log(getCookie("devices"))
         if (!isUserLoggedIn()) {
             router.push(`/login?target=${router.asPath}`);
         }
@@ -50,7 +49,7 @@ export default function Reports() {
             },
             options: devices,
             onSelect: (val) => {
-                setValue("device_id", val.value);
+                setValue("device_id", val.id);
                 clearErrors("device_id");
             },
             err:
