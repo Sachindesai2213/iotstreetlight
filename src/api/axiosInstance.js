@@ -24,7 +24,10 @@ let refresh_token =
 const instance = axios.create({
     baseURL: API_URL,
     timeout: 1000,
-    headers: { Authorization: `Bearer ${auth_token}` },
+    headers: {
+        Authorization: `Bearer ${auth_token}`,
+        "Access-Control-Allow-Origin": "*"
+    },
 });
 
 instance.interceptors.request.use(async (req) => {
