@@ -20,7 +20,7 @@ export const USERS = {
         },
     },
     ACTIVITIES: {
-        ALL: "/api/activities",
+        ALL: () => "/api/activities",
     },
     REPORTS: {
         ALL: ({ device_id, start_date, end_date }) =>
