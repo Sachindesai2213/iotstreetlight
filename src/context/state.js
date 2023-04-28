@@ -20,16 +20,16 @@ export function AppWrapper({ children }) {
 
     }, [token])
 
-    const response = user.devices.all()
+    // const response = user.devices.all()
 
-    let devices = []
+    // let devices = []
 
-    if (response?.status == 200) {
-        response.data.map(({id, name, device_parameters}) => {
-            devices.push({id, name, device_parameters})
-        })
-        setCookie("devices", JSON.stringify(devices))
-    }
+    // if (response?.status == 200) {
+    //     response.data.map(({id, name, device_parameters}) => {
+    //         devices.push({id, name, device_parameters})
+    //     })
+    //     setCookie("devices", JSON.stringify(devices))
+    // }
 
     return (
         <AppContext.Provider value={{devices, setToken, token}}>

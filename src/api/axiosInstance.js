@@ -26,55 +26,53 @@ const instance = axios.create({
     timeout: 1000,
     headers: {
         Authorization: `Bearer ${auth_token}`,
-        "Access-Control-Allow-Origin": "*"
     },
 });
 
-instance.interceptors.request.use(async (req) => {
+// instance.interceptors.request.use(async (req) => {
+//     // console.log(req)
 
-    // console.log(req)
+//     if (!auth_token) {
+//         auth_token = window?.localStorage?.getItem("token")
+//             ? window?.localStorage?.getItem("token")
+//             : null;
 
-    if (!auth_token) {
-        auth_token = window?.localStorage?.getItem("token")
-            ? window?.localStorage?.getItem("token")
-            : null;
+//         let refresh_token = window?.localStorage?.getItem("refresh_token")
+//             ? window?.localStorage?.getItem("refresh_token")
+//             : null;
+//     }
 
-        let refresh_token = window?.localStorage?.getItem("refresh_token")
-            ? window?.localStorage?.getItem("refresh_token")
-            : null;
-    }
+//     // if (!auth_token) return req;
 
-    // if (!auth_token) return req;
+//     // const user = jwt_decode(auth_token);
+//     // const isExpired = dayjs.unix(user.exp).diff(dayjs()) < 1;
 
-    // const user = jwt_decode(auth_token);
-    // const isExpired = dayjs.unix(user.exp).diff(dayjs()) < 1;
+//     // console.log(user);
 
-    // console.log(user);
+//     // req.headers.Authorization = `Bearer ${auth_token}`;
 
-    // req.headers.Authorization = `Bearer ${auth_token}`;
+//     // if (!isExpired || !auth_token) return req;
 
-    // if (!isExpired || !auth_token) return req;
+//     // console.log("Expired");
 
-    // console.log("Expired");
+//     // const { data, status } = await axios.post(`${API_URL}/api/token/refresh`, {
+//     //     refresh: refresh_token,
+//     // });
 
-    // const { data, status } = await axios.post(`${API_URL}/api/token/refresh`, {
-    //     refresh: refresh_token,
-    // });
+//     // console.log(status);
 
-    // console.log(status);
+//     // if (status != 200) {
+//     //     window.localStorage.removeItem("token");
+//     //     window.localStorage.removeItem("refresh_token");
+//     //     deleteCookie("user_id");
+//     //     // router.push('/login')
+//     // }
 
-    // if (status != 200) {
-    //     window.localStorage.removeItem("token");
-    //     window.localStorage.removeItem("refresh_token");
-    //     deleteCookie("user_id");
-    //     // router.push('/login')
-    // }
+//     // auth_token = data.access;
 
-    // auth_token = data.access;
-
-    // localStorage.setItem("token", auth_token);
-    req.headers.Authorization = `Bearer ${auth_token}`;
-    return req;
-});
+//     // localStorage.setItem("token", auth_token);
+//     req.headers.Authorization = `Bearer ${auth_token}`;
+//     return req;
+// });
 
 export default instance;
