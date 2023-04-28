@@ -32,7 +32,7 @@ export function AppWrapper({ children }) {
     // }
 
     return (
-        <AppContext.Provider value={{devices, setToken, token}}>
+        <AppContext.Provider value={{setToken, token}}>
             {children}
         </AppContext.Provider>
     );
