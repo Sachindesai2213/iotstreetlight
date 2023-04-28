@@ -39,7 +39,7 @@ export default function Dashboard() {
                     )}
                 </div>
             </div>
-            {/* <div className="p-4">
+            <div className="p-4">
                 <LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_MAPS_KEY}>
                     <GoogleMap
                         zoom={11}
@@ -58,7 +58,7 @@ export default function Dashboard() {
                         )}
                     </GoogleMap>
                 </LoadScript>
-            </div> */}
+            </div>
         </>
     );
 }
