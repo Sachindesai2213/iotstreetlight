@@ -1,38 +1,50 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import jwt_decode from "jwt-decode";
-import { setCookie } from "../utils/cookies"
-import { user } from "@src/api"
-
+import { setCookie } from "../utils/cookies";
+import axios from "axios";
+import { headers } from "next.config";
 
 const AppContext = createContext();
 
 export function AppWrapper({ children }) {
-    // const [devices, setDevices] = useState([]);
-    let [token, setToken] = useState(()=> typeof window !== "undefined" ? window?.localStorage?.getItem("token") : null)
-    let [loggedInUser, setLoggedInUser] = useState({})
-    
-    useEffect(()=> {
+    let [token, setToken] = useState(() =>
+        typeof window !== "undefined"
+            ? window?.localStorage?.getItem("token")
+            : null
+    );
 
-        if(token){
-            setLoggedInUser(jwt_decode(token))
-            setCookie("user_id", jwt_decode(token).user_id)
+    const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
+    useEffect(() => {
+        if (window?.localStorage?.getItem("token")) {
+            setCookie("user_id", jwt_decode(token).user_id);
+
+            axios({
+                method: "GET",
+                url: `${API_URL}/api/devices`,
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            })
+                .then((response) => {
+                    console.log(response);
+
+                    if (response?.status == 200) {
+                        let temp = [];
+                        response.data.map(({ id, name, device_parameters }) => {
+                            temp.push({ id, name, device_parameters });
+                        });
+                        setCookie("devices", JSON.stringify(temp));
+                    }
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
         }
-
-    }, [token])
-
-    // const response = user.devices.all()
-
-    // let devices = []
-
-    // if (response?.status == 200) {
-    //     response.data.map(({id, name, device_parameters}) => {
-    //         devices.push({id, name, device_parameters})
-    //     })
-    //     setCookie("devices", JSON.stringify(devices))
-    // }
+    }, [token]);
 
     return (
-        <AppContext.Provider value={{setToken, token}}>
+        <AppContext.Provider value={{ setToken, token }}>
             {children}
         </AppContext.Provider>
     );

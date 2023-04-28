@@ -15,7 +15,6 @@ export default function AnalyticsCard(props) {
     const iso_date_format = date.toISOString().split("T")[0];
     const user_id = getCookie("user_id");
     const devices = getCookie("devices") ? JSON.parse(getCookie("devices")) : [];
-    console.log(devices)
     const device = devices ? devices[0] : undefined
     const device_id = device ? device.id : 1
     const [deviceParameters, setDeviceParameters] = useState(device ? device.device_parameters : [])
@@ -192,7 +191,6 @@ export default function AnalyticsCard(props) {
             },
             options: deviceParameters,
             onSelect: (val) => {
-                console.log(val)
                 setValue("parameter_1", val.key);
                 clearErrors("parameter_1");
             },

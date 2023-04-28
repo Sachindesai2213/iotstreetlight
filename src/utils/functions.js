@@ -1,4 +1,7 @@
 import { deleteCookie, getCookie, setCookie } from "./cookies"
+// import { useAppContext } from "@src/context/state"
+
+// const { setToken } = useAppContext()
 
 export function login_user(data){
     const {user_id, username, devices} = data
@@ -8,9 +11,10 @@ export function login_user(data){
 }
 
 export function logout_user(){
-    deleteCookie("user_id")
-    deleteCookie("username")
-    deleteCookie("devices")
+    window.localStorage.removeItem("token");
+    window.localStorage.removeItem("refresh_token");
+    deleteCookie("user_id");
+    // setToken(null)
     window.location.href = "/"
 }
 
