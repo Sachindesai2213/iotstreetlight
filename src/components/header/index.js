@@ -21,26 +21,24 @@ export default function Header(props) {
     } = useForm();
 
     const GROUPS = [
-        {name: 'Bandra', value: 'Bandra'},
-        {name: 'Andheri', value: 'Andheri'},
-    ]
+        { name: "Bandra", value: "Bandra" },
+        { name: "Andheri", value: "Andheri" },
+        { name: "Borivali", value: "Borivali" },
+    ];
 
     const group_select = {
         attrs: {
             placeholder: "Select Group",
             ...register("group", { required: false }),
-            defaultValue: group
+            defaultValue: group,
         },
         options: GROUPS,
         onSelect: (val) => {
             setValue("group", val);
             clearErrors("group");
-            setCookie("group", val)
+            setCookie("group", val);
         },
-        err:
-            errors.group &&
-            errors.group.type == "required" &&
-            "Required*",
+        err: errors.group && errors.group.type == "required" && "Required*",
     };
 
     return (
