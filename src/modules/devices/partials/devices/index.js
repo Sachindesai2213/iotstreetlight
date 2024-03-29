@@ -36,6 +36,7 @@ export default function DevicesTable(props){
                 <Column dataField="name" caption="Device" alignment="center" />
                 <Column dataField="group" caption="Group" alignment="center" />
                 <Column caption="Push data" alignment="center" cellRender={DeviceGridButton} />
+                <Column dataField="unit" caption="Unit" alignment="center" />
                 <MasterDetail
                     enabled={true}
                     component={Parameters}

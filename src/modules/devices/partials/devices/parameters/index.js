@@ -31,7 +31,7 @@ export default function Parameters(props) {
                 showBorders
                 showFilterRows
                 onSaved={async (e) => {
-                    e.changes[0].data.device_id = id;
+                    e.changes[0].data.device = id;
                     e.changes[0].data.user_id = user_id;
                     const response = await user.devices.parameters.create(
                         e.changes[0].data
