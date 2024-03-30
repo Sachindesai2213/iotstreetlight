@@ -3,7 +3,9 @@ import { USERS } from "./endpoints";
 import { api } from "./wrapper";
 
 function swr(variable, fxn) {
-    const response = useSWR(variable, fxn);
+    const response = useSWR(variable, fxn, {
+        revalidateOnFocus: false
+    });
     return response.data;
 }
 

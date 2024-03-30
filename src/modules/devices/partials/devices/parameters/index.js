@@ -66,6 +66,11 @@ export default function Parameters(props) {
                     caption="Max threshold"
                     alignment="center"
                 />
+                <Column
+                    dataField="unit"
+                    caption="Unit"
+                    alignment="center"
+                />
                 <Column dataField="notify" caption="Notify" alignment="center">
                     <Lookup
                         dataSource={NOTIFY_OPTIONS}
