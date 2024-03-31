@@ -40,8 +40,8 @@ export default function Parameters(props) {
             >
                 <Editing
                     mode="row"
-                    // allowUpdating={true}
-                    // allowDeleting={true}
+                    allowUpdating={true}
+                    allowDeleting={true}
                     allowAdding={true}
                 />
                 <FilterRow visible />
