@@ -10,12 +10,6 @@ import { isUserLoggedIn } from "@src/utils/functions";
 export default function Header(props) {
     const { activeNavItem } = props;
 
-    useEffect(() => {
-        if(!isUserLoggedIn()){
-            window.location.href = '/login?target=' + window.location.href
-        }
-    }, [])
-
     const group = getCookie("group");
 
     const GROUPS = [
