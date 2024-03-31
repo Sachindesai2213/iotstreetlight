@@ -17,7 +17,6 @@ export default function Devices(){
     }, [])
 
     const devices = user.devices.all()
-    console.log(devices)
 
     return (
         <>

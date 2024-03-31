@@ -1,6 +1,6 @@
 import { user } from "@src/api";
 import { METER_PARAMETERS } from "@src/utils/globals";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { getCookie } from "@src/utils/cookies";
 import { useForm } from "react-hook-form";
 import ChartType from "../chart";
@@ -8,13 +8,16 @@ import DateFilter from "../date-filter";
 import Loader from "../loader";
 import { Tabs } from "flowbite-react";
 import Icon from "../icon";
+import { DatePicker, Form, Select } from "antd";
+import dayjs from "dayjs";
 
 export default function AnalyticsCard(props) {
+    const [hourlyForm] = Form.useForm()
+    const [dailyForm] = Form.useForm()
+    const [monthlyForm] = Form.useForm()
     const { text, loading, type, index, onRemoveGraph } = props;
-    const date = new Date();
-    const iso_date_format = date.toISOString().split("T")[0];
-    const user_id = getCookie("user_id");
-    const devices = getCookie("devices") ? JSON.parse(getCookie("devices")) : [];
+    const rawDevices = user.devices.all()
+    const devices = rawDevices?.data
     const device = devices ? devices[0] : undefined
     const device_id = device ? device.id : 1
     const [deviceParameters, setDeviceParameters] = useState(device ? device.device_parameters : [])
@@ -30,34 +33,75 @@ export default function AnalyticsCard(props) {
     } = useForm();
 
     const [hourlyPayload, setHourlyPayload] = useState({
-        user_id: user_id,
-        device_id: device_id,
-        date: iso_date_format,
-        parameter_1: device && device.device_parameters ? device.device_parameters[0].key : '',
+        device_id,
+        date: dayjs().format(`YYYY-MM-DD`),
+        parameter_1: "",
         parameter_2: "",
         type: "avg",
         interval: "hourly",
     });
 
     const [dailyPayload, setDailyPayload] = useState({
-        user_id: user_id,
-        device_id: device_id,
-        month: iso_date_format.slice(0, 7),
-        parameter_1: device && device.device_parameters ? device.device_parameters[0].key : '',
+        device_id,
+        month: dayjs().format(`YYYY-MM`),
+        parameter_1: "",
         parameter_2: "",
         type: "avg",
         interval: "daily",
     });
 
     const [monthlyPayload, setMonthlyPayload] = useState({
-        user_id: user_id,
-        device_id: device_id,
-        year: iso_date_format.slice(0, 4),
-        parameter_1: device && device.device_parameters ? device.device_parameters[0].key : '',
+        device_id,
+        year: dayjs().format(`YYYY`),
+        parameter_1: "",
         parameter_2: "",
         type: "avg",
         interval: "monthly",
     });
+
+    useEffect(() => {
+        let parameter_1 = device && device.device_parameters ? device.device_parameters[0].key : ''
+        let parameter_2 = parameter_1
+        setHourlyPayload({
+            device_id,
+            date: dayjs().format(`YYYY-MM-DD`),
+            parameter_1,
+            parameter_2,
+            type: "avg",
+            interval: "hourly",
+        })
+        setDailyPayload({
+            device_id,
+            month: dayjs().format(`YYYY-MM`),
+            parameter_1,
+            parameter_2,
+            type: "avg",
+            interval: "daily",
+        })
+        setMonthlyPayload({
+            device_id,
+            year: dayjs().format(`YYYY`),
+            parameter_1,
+            parameter_2,
+            type: "avg",
+            interval: "monthly",
+        })
+        hourlyForm.setFieldsValue({
+            device_id,
+            parameter_1,
+            parameter_2
+        })
+        dailyForm.setFieldsValue({
+            device_id,
+            parameter_1,
+            parameter_2
+        })
+        monthlyForm.setFieldsValue({
+            device_id,
+            parameter_1,
+            parameter_2
+        })
+    }, [device])
 
     let additionalHourlyInputs;
     let additionalDailyInputs;
@@ -162,106 +206,62 @@ export default function AnalyticsCard(props) {
             break;
     }
 
+    const formatParameters = (params) => {
+        return params.map((item) => {
+            return {
+                value: item.key,
+                label: item.name
+            }
+        })
+    }
+
     const inputProps = {
-        device: {
-            label: "Select device",
-            attrs: {
-                placeholder: "Select parameter1",
-                ...register("device", { required: false }),
-                value: device_id
-            },
-            options: devices,
-            onSelect: (val) => {
-                setValue("device", val.id);
-                clearErrors("device");
-                device = devices.find((device) => device.id == val.id)
-                setDeviceParameters(device ? device.device_parameters : [])
-            },
-            err:
-                errors.device &&
-                errors.device.type == "required" &&
-                "Required*",
-        },
-        parameter_select1: {
-            label: "Select parameter",
-            attrs: {
-                placeholder: "Select parameter1",
-                ...register("parameter_1", { required: false }),
-                value: device && device.device_parameters ? device.device_parameters[0].key : ''
-            },
-            options: deviceParameters,
-            onSelect: (val) => {
-                setValue("parameter_1", val.key);
-                clearErrors("parameter_1");
-            },
-            err:
-                errors.parameter_1 &&
-                errors.parameter_1.type == "required" &&
-                "Required*",
-        },
-        parameter_select2: {
-            label: "Select parameter",
-            attrs: {
-                placeholder: "Select parameter2",
-                ...register("parameter_2", { required: false }),
-            },
-            options: deviceParameters,
-            onSelect: (val) => {
-                setValue("parameter_2", val.key);
-                clearErrors("parameter_2");
-            },
-            err:
-                errors.parameter_2 &&
-                errors.parameter_2.type == "required" &&
-                "Required*",
-        },
-        date: {
-            label: "Date",
-            leftIcon: "account-circle-primary",
-            attrs: {
-                type: "date",
-                ...register("date", {
-                    value: iso_date_format,
-                    required: false,
-                }),
-            },
-            err:
-                errors.date &&
-                errors.date.type == "required" &&
-                "Please enter a Date",
-        },
-        month: {
-            label: "Month",
-            leftIcon: "account-circle-primary",
-            attrs: {
-                type: "month",
-                pattern: "[0-9]{4}-[0-9]{2}",
-                ...register("month", {
-                    value: iso_date_format.slice(0, 7),
-                    required: false,
-                }),
-            },
-            err:
-                errors.month &&
-                errors.month.type == "required" &&
-                "Please enter a Month",
-        },
-        year: {
-            label: "Year",
-            leftIcon: "account-circle-primary",
-            attrs: {
-                type: "year",
-                pattern: "[0-9]{4}",
-                ...register("year", {
-                    value: iso_date_format.slice(0, 4),
-                    required: false,
-                }),
-            },
-            err:
-                errors.year &&
-                errors.year.type == "required" &&
-                "Please enter a Year",
-        },
+        device: (
+            <Form.Item className={``} name={`device_id`} label={`Select device`}>
+                <Select
+                    options={devices?.map((item) => {
+                        return {
+                            value: item.id,
+                            label: item.name
+                        }
+                    })}
+                    onChange={(data) => {
+                        console.log(data)
+                        device = devices.find((device) => device.id == data)
+                        setDeviceParameters(device ? formatParameters(device.device_parameters) : [])
+                    }}
+                />
+            </Form.Item>
+        ),
+        parameter_select1: (
+            <Form.Item className={``} name={`parameter_1`} label={`Select parameter 1`}>
+                <Select
+                    options={deviceParameters}
+                />
+            </Form.Item>
+        ),
+        parameter_select2: (
+            <Form.Item className={``} name={`parameter_2`} label={`Select parameter 2`}>
+                <Select
+                    options={deviceParameters}
+                />
+            </Form.Item>
+        ),
+        date: (
+            <Form.Item label={`Select date`} name={`date`}>
+                <DatePicker className={``} format={`YYYY-MM-DD`} defaultValue={dayjs()}/>
+            </Form.Item>
+        ),
+        month: (
+            <Form.Item label={`Select date`} name={`date`}>
+                <DatePicker className={``} format={`YYYY-MM`} picker={`month`} defaultValue={dayjs()}/>
+            </Form.Item>
+        ),
+        year: (
+            <Form.Item label={`Select date`} name={`date`}>
+                <DatePicker className={``} format={`YYYY`} picker={`year`} defaultValue={dayjs()}/>
+            </Form.Item>
+        ),
     };
 
     const _additionalHourlyInputs = additionalHourlyInputs.map((item, key) => {
@@ -279,35 +279,22 @@ export default function AnalyticsCard(props) {
     );
 
     const onHourlySubmitForm = (data) => {
-        data["user_id"] = user_id;
-        data["device_id"] = 1;
+        const date = data.date
+        data.date = dayjs(date).format(`YYYY-MM-DD`)
         data["type"] = graph_type;
-        data["parameter_2"] =
-            "parameter_2" in data && data["parameter_2"]
-                ? data["parameter_2"]
-                : "";
+        data.interval = "hourly";
         setHourlyPayload(data);
     };
 
     const onDailySubmitForm = (data) => {
-        data["user_id"] = user_id;
-        data["device_id"] = 1;
         data["type"] = graph_type;
-        data["parameter_2"] =
-            "parameter_2" in data && data["parameter_2"]
-                ? data["parameter_2"]
-                : "";
+        data.interval = "daily";
         setDailyPayload(data);
     };
 
     const onMonthlySubmitForm = (data) => {
-        data["user_id"] = user_id;
-        data["device_id"] = 1;
         data["type"] = graph_type;
-        data["parameter_2"] =
-            "parameter_2" in data && data["parameter_2"]
-                ? data["parameter_2"]
-                : "";
+        data.interval = "monthly";
         setMonthlyPayload(data);
     };
 
@@ -327,19 +314,13 @@ export default function AnalyticsCard(props) {
                     <Icon icon="close"/>
                 </div>
             </div>
-            <Tabs.Group aria-label="Analytics" style="underline">
+            <Tabs.Group aria-label="Analytics" style="underline" key={index}>
                 <Tabs.Item active={true} title="Hourly">
                     <div className="flex">
-                        <form
-                            onSubmit={handleSubmit(onHourlySubmitForm)}
-                            autoComplete="off"
-                        ></form>
                         <DateFilter
-                            register={register}
-                            errors={errors}
-                            handleSubmit={handleSubmit}
+                            handleSubmit={onHourlySubmitForm}
                             additionalInputs={_additionalHourlyInputs}
-                            onSubmitForm={onHourlySubmitForm}
+                            form={hourlyForm}
                         />
                     </div>
                     {!!hourly_report ? (
@@ -350,16 +331,10 @@ export default function AnalyticsCard(props) {
                 </Tabs.Item>
                 <Tabs.Item title="Daily">
                     <div className="flex">
-                        <form
-                            onSubmit={handleSubmit(onDailySubmitForm)}
-                            autoComplete="off"
-                        ></form>
                         <DateFilter
-                            register={register}
-                            errors={errors}
-                            handleSubmit={handleSubmit}
+                            handleSubmit={onDailySubmitForm}
                             additionalInputs={_additionalDailyInputs}
-                            onSubmitForm={onDailySubmitForm}
+                            form={dailyForm}
                         />
                     </div>
                     {!!daily_report ? (
@@ -370,16 +345,10 @@ export default function AnalyticsCard(props) {
                 </Tabs.Item>
                 <Tabs.Item title="Monthly">
                     <div className="flex">
-                        <form
-                            onSubmit={handleSubmit(onMonthlySubmitForm)}
-                            autoComplete="off"
-                        ></form>
                         <DateFilter
-                            register={register}
-                            errors={errors}
-                            handleSubmit={handleSubmit}
+                            handleSubmit={onMonthlySubmitForm}
                             additionalInputs={_additionalMonthlyInputs}
-                            onSubmitForm={onMonthlySubmitForm}
+                            form={monthlyForm}
                         />
                     </div>
                     {!!monthly_report ? (

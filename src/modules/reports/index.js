@@ -2,36 +2,41 @@ import { user } from "@src/api";
 import Loader from "@src/components/loader";
 import Header from "@src/components/header";
 import { getCookie } from "@src/utils/cookies";
-import { isUserLoggedIn } from "@src/utils/functions";
+import { formatAntdDate, isUserLoggedIn } from "@src/utils/functions";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import ReportsTable from "./partials/reports-table";
 import DateFilter from "@src/components/date-filter";
 import { useForm } from "react-hook-form";
+import { Button, DatePicker, Form, Select } from "antd";
+import dayjs from "dayjs";
 
 export default function Reports() {
-    const date = new Date();
-    const iso_date_format = date.toISOString().split("T")[0];
-    const user_id = getCookie("user_id");
-    const devices = getCookie("devices") ? JSON.parse(getCookie("devices")) : [];
+    const [form] = Form.useForm()
+    const rawDevices = user.devices.all()
+    const devices = rawDevices?.data
     const router = useRouter();
-    const start_date={iso_date_format}
-    const end_date={iso_date_format}
 
     const {
         register,
         handleSubmit,
-        setValue,
-        clearErrors,
         formState: { errors },
     } = useForm();
 
     const [payload, setPayload] = useState({
-        device_id: 1,
-        user_id: user_id,
-        start_date: iso_date_format,
-        end_date: iso_date_format,
+        device_id: null,
+        start_date: dayjs().format('YYYY-MM-DD'),
+        end_date: dayjs().format('YYYY-MM-DD'),
     });
+
+    useEffect(() => {
+        const temp = {
+            ...payload,
+            device_id: devices?.[0].id
+        }
+        setPayload(temp)
+        form.setFieldsValue({device_id: devices?.[0].id})
+    }, [devices])
 
     useEffect(() => {
         if (!isUserLoggedIn()) {
@@ -41,53 +46,29 @@ export default function Reports() {
 
     const reports = user.reports.all(payload);
     const _additionalInputs = [
-        {
-            label: "Select device",
-            attrs: {
-                placeholder: "Select device",
-                ...register("device_id", { required: false }),
-            },
-            options: devices,
-            onSelect: (val) => {
-                setValue("device_id", val.id);
-                clearErrors("device_id");
-            },
-            err:
-                errors.device_id &&
-                errors.device_id.type == "required" &&
-                "Required*",
-        },
-        {
-            label: "Start Date",
-            leftIcon: "account-circle-primary",
-            attrs: {
-                type: "date",
-                ...register("start_date", {
-                    required: true,
-                    value: start_date,
-                }),
-            },
-            err:
-                errors.start_date &&
-                errors.start_date.type == "required" &&
-                "Please enter a Start Date",
-        },
-        {
-            label: "End Date",
-            leftIcon: "account-circle-primary",
-            attrs: {
-                type: "date",
-                ...register("end_date", { required: true, value: end_date }),
-            },
-            err:
-                errors.end_date &&
-                errors.end_date.type == "required" &&
-                "Please enter a End Date",
-        },
+        <Form.Item className={`w-60`} name={`device_id`} label={`Select device`}>
+            <Select
+                options={devices?.map((item) => {
+                    return {
+                        value: item.id,
+                        label: item.name
+                    }
+                })}
+            />
+        </Form.Item>,
+        
+        <Form.Item label={`Start date`} name={`start_date`}>
+            <DatePicker className={`w-60`} format={`YYYY-MM-DD`} defaultValue={dayjs()}/>
+        </Form.Item>,
+
+        <Form.Item label={`End date`} name={`end_date`}>
+            <DatePicker className={`w-60`} format={`YYYY-MM-DD`} defaultValue={dayjs()}/>
+        </Form.Item>
     ];
 
     const onSubmitForm = (data) => {
-        data["user_id"] = user_id;
+        data.start_date = dayjs(data.start_date).format('YYYY-MM-DD')
+        data.end_date = dayjs(data.end_date).format('YYYY-MM-DD')
         setPayload(data);
     };
     return (
@@ -101,8 +82,9 @@ export default function Reports() {
                             register={register}
                             errors={errors}
                             additionalInputs={_additionalInputs}
-                            handleSubmit={handleSubmit}
+                            handleSubmit={onSubmitForm}
                             onSubmitForm={onSubmitForm}
+                            form={form}
                         />
                     </div>
                 </div>

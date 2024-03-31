@@ -4,7 +4,7 @@ import DataGrid, { Column, FilterRow, HeaderFilter, ColumnChooser, Export } from
 
 export default function ReportsTable(props){
     const {reports, parameters} = props
-    const user_id = getCookie("user_id")
+    
     return (
         <div>
             <DataGrid

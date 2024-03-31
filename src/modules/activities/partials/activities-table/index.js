@@ -4,7 +4,7 @@ import DataGrid, { Column, Editing, FilterRow, HeaderFilter, Lookup, PatternRule
 
 export default function ActivitiesTable(props){
     const {activities} = props
-    const user_id = getCookie("user_id")
+    
     return (
         <div className="p-5">
             <DataGrid

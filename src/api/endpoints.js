@@ -24,12 +24,7 @@ export const USERS = {
     },
     REPORTS: {
         ALL: ({ device_id, start_date, end_date }) =>
-            "/api/reports?device_id=" +
-            device_id +
-            "&start_date=" +
-            start_date +
-            "&end_date=" +
-            end_date,
+            `/api/reports?${device_id ? `device_id=${device_id}` : ""}&start_date=${start_date}&end_date=${end_date}`,
     },
     INTERVAL_REPORT: {
         ALL: ({ device_id, date, month, year, parameter_1, parameter_2, type, interval }) =>
@@ -44,7 +39,7 @@ export const USERS = {
             "&parameter_1=" +
             parameter_1 +
             "&parameter_2=" +
-            parameter_2 +
+            (parameter_2 || "") +
             "&type=" +
             type +
             "&interval=" +

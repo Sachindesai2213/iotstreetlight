@@ -1,6 +1,6 @@
 import useSWR from "swr";
 import { USERS } from "./endpoints";
-import { api } from "./wrapper";
+import api from "./axiosInstance";
 
 function swr(variable, fxn) {
     const response = useSWR(variable, fxn, {
