@@ -1,58 +1,58 @@
-import axios from "axios";
-import jwt_decode from "jwt-decode";
-import dayjs from "dayjs";
-import { deleteCookie } from "../utils/cookies";
-import { logout_user } from "@src/utils/functions";
+import axios from "axios"
+import { deleteCookie, getCookie, setCookie } from "@src/utils/cookies"
+import jwtDecode from "jwt-decode"
+import dayjs from "dayjs"
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
+const API_URL = process.env.NEXT_PUBLIC_API_URL
 
-let auth_token =
-    typeof window !== "undefined"
-        ? window?.localStorage?.getItem("token")
-        : null;
+const createRequest = () => {
 
-let refresh_token =
-    typeof window !== "undefined"
-        ? window?.localStorage?.getItem("refresh_token")
-        : null;
+    const axiosInstance = axios.create({
+        baseURL: API_URL,
+        headers: {}
+    })
 
-const instance = axios.create({
-    baseURL: API_URL,
-    timeout: 1000,
-    headers: { Authorization: `Bearer ${auth_token}` },
-});
+    axiosInstance.interceptors.request.use(async (req) => {
+        const jwt_token = getCookie()
 
-instance.interceptors.request.use(async (req) => {
-    if (!auth_token) {
-        auth_token = window?.localStorage?.getItem("token")
-            ? window?.localStorage?.getItem("token")
-            : null;
+        if(jwt_token){
 
-        let refresh_token = window?.localStorage?.getItem("refresh_token")
-            ? window?.localStorage?.getItem("refresh_token")
-            : null;
-    }
+            const tokenData = jwtDecode(jwt_token)
+            const isExpired = dayjs.unix(tokenData.exp).diff(dayjs()) < 1;
 
-    if (!auth_token) return req;
+            if (isExpired) {
+                const refresh_token = getCookie("refresh_token")
+                console.log(refresh_token)
+                axios
+                    .post(`${API_URL}/api/token/refresh`, {
+                        refresh: refresh_token,
+                    })
+                    .then((response) => {
+                        deleteCookie()
+                        deleteCookie('refresh_token')
+                        const auth_token = response.data.access;
+                        setCookie("token", auth_token);
+                        req.headers.Authorization = `Bearer ${auth_token}`;
+                        return req;
+                    })
+            } else{
+                req.headers = {
+                    Authorization: `Bearer ${jwt_token}`
+                }
+            }
+        }
 
-    const user = jwt_decode(auth_token);
-    const isExpired = dayjs.unix(user.exp).diff(dayjs()) < 1;
+        return req
+    })
 
-    req.headers.Authorization = `Bearer ${auth_token}`;
+    axiosInstance.interceptors.response.use((response) => response, (error) => {
+        if(error.response.status == 401){
+        }
+    })
+    
+    return axiosInstance
+}
 
-    if (!isExpired || !auth_token) return req;
+const api = createRequest()
 
-    axios
-        .post(`${API_URL}/api/token/refresh`, {
-            refresh: refresh_token,
-        })
-        .then((response) => {
-            auth_token = response.data.access;
-            window.localStorage.setItem("token", auth_token);
-            req.headers.Authorization = `Bearer ${auth_token}`;
-            return req;
-        })
-        .catch((err) => logout_user());
-});
-
-export default instance;
+export default api

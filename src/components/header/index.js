@@ -1,45 +1,32 @@
 import Link from "next/link";
 import Button from "../button";
-import Icon from "../icon";
 import Logo from "../logo";
 import Nav from "./partials/nav";
-import Input from "../input";
-import { useForm } from "react-hook-form";
 import { getCookie, setCookie } from "@src/utils/cookies";
+import { Form, Select } from "antd";
+import { useEffect } from "react";
+import { isUserLoggedIn } from "@src/utils/functions";
 
 export default function Header(props) {
     const { activeNavItem } = props;
 
+    useEffect(() => {
+        if(!isUserLoggedIn()){
+            window.location.href = '/login?target=' + window.location.href
+        }
+    }, [])
+
     const group = getCookie("group");
 
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-        setValue,
-        clearErrors,
-    } = useForm();
-
     const GROUPS = [
-        { name: "Bandra", value: "Bandra" },
-        { name: "Andheri", value: "Andheri" },
-        { name: "Borivali", value: "Borivali" },
+        { label: "Bandra", value: "Bandra" },
+        { label: "Andheri", value: "Andheri" },
+        { label: "Borivali", value: "Borivali" },
     ];
 
-    const group_select = {
-        attrs: {
-            placeholder: "Select Group",
-            ...register("group", { required: false }),
-            defaultValue: group,
-        },
-        options: GROUPS,
-        onSelect: (val) => {
-            setValue("group", val);
-            clearErrors("group");
-            setCookie("group", val);
-        },
-        err: errors.group && errors.group.type == "required" && "Required*",
-    };
+    const onChangeGroup = (group) => {
+        setCookie("group", group);
+    }
 
     return (
         <div className="flex items-center justify-center bg-white shadow-md relative z-10">
@@ -57,7 +44,9 @@ export default function Header(props) {
                 </div>
                 <div className="col-span-6 md:col-span-3 flex items-center justify-end">
                     <div className="mr-2">
-                        <Input {...group_select} />
+                        <Form.Item name={`group`} noStyle>
+                            <Select placeholder={`Select group`} defaultValue={group} options={GROUPS} onChange={onChangeGroup}/>
+                        </Form.Item>
                     </div>
                     <Link href="/profile">
                         <a>

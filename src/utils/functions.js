@@ -22,3 +22,10 @@ export function isUserLoggedIn(){
     const user_id = getCookie("user_id")
     return !!user_id
 }
+
+export function formatAntdDate(dateObj) {
+    const year = dateObj["$y"];
+    const month = dateObj["$M"] + 1; // Months are zero-based in JavaScript
+    const day = dateObj["$D"];
+    return `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+}
