@@ -4,8 +4,6 @@ import Logo from "../logo";
 import Nav from "./partials/nav";
 import { getCookie, setCookie } from "@src/utils/cookies";
 import { Form, Select } from "antd";
-import { useEffect } from "react";
-import { isUserLoggedIn } from "@src/utils/functions";
 
 export default function Header(props) {
     const { activeNavItem } = props;

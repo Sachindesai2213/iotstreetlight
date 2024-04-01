@@ -19,8 +19,8 @@ export function logout_user(){
 }
 
 export function isUserLoggedIn(){
-    const user_id = getCookie("user_id")
-    return !!user_id
+    const jwt_token = getCookie()
+    return !!jwt_token
 }
 
 export function formatAntdDate(dateObj) {
